@@ -5,10 +5,38 @@ A Python library for interacting with the LibreHardwareMonitor API.
 This library provides a simple interface for fetching data from the API provided by the inbuilt LibreHardwareMonitor web server.
 
 ## Methods
-The library provides two callable methods:
+The library provides one callable method:
 
-* `get_data_json`: Returns the unmodified `data.json` response from the LibreHardwareMonitor API as dict.
-* `get_hardware_device_names`: Returns a list of all hardware device names in the computer.
+* `get_data`: Returns a `LibreHardwareMonitorData` object containing main device names and all sensor data from your Libre Hardware Monitor instance.
+
+`LibreHardwareMonitorData` has 2 properties with the following structure:
+```
+LibreHardwareMonitorData(
+    main_device_names: list[str] 
+    # for example: 
+    # ["AMD Ryzen 7 7800X3D", "NVIDIA GeForce RTX 4080 SUPER"]
+    
+    sensor_data: dict[str, LibreHardwareMonitorSensorData] 
+    # for example 
+    # {
+    #     "amdcpu-0-power-0": {
+    #         "name": Package Power", 
+    #         "value": "25,6", 
+    #         "min": "25,2", 
+    #         "max": "76,4", 
+    #         "unit": "W", 
+    #         "device_name": "AMD Ryzen 7 7800X3D", 
+    #         "device_type": "CPU",
+    #         "sensor_id": "amdcpu-0-power-0"
+    #     },
+    #     "amdcpu-0-power-1" : { ... },
+    #     ...
+    # }
+    # the dictionary keys represent a unique sensor id.
+)
+```
+
+
 
 ## Installation
 To install the library, run the following command:
@@ -24,11 +52,9 @@ from librehardwaremonitor_api import LibreHardwareMonitorClient
 async def main():
     client = LibreHardwareMonitorClient("<HOSTNAME OR IP ADDRESS>", <PORT>)
     
-    data_json = await client.get_data_json()
-    print(data_json)
-    
-    device_names = await client.get_hardware_device_names()
-    print(device_names)
+    lhm_data = await client.get_data()
+    print(lhm_data.main_device_names)
+    print(lhm_data.sensor_data)
 
 asyncio.run(main())
 ```

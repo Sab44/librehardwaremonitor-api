@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='librehardwaremonitor-api',
-    version='1.0.1',
+    version='1.1.0',
     packages=['librehardwaremonitor_api'],
     install_requires=[
         'aiohttp'
