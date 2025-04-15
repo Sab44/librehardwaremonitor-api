@@ -14,32 +14,24 @@ LHM_VALUE = "Value"
 
 class LibreHardwareMonitorParser:
 
-    def parse_data(self, lhm_data) -> LibreHardwareMonitorData:
+    def parse_data(self, lhm_data: dict[str, Any]) -> LibreHardwareMonitorData:
         """Get data from all sensors across all devices."""
         main_devices = lhm_data[LHM_CHILDREN][0][LHM_CHILDREN]
-        main_device_names: list[str] = []
 
-        sensors_data: dict[str, LibreHardwareMonitorSensorData] = {}
+        sensor_data: dict[str, LibreHardwareMonitorSensorData] = {}
         for main_device in main_devices:
-            sensor_data_for_device = self._parse_sensor_data(main_device)
+            sensors_for_device = self._parse_sensor_data(main_device)
 
-            if sensor_data_for_device:
-                main_device_names.append(main_device[LHM_NAME])
+            for sensor in sensors_for_device:
+                sensor_data[sensor.sensor_id] = sensor
 
-            for sensor_data in sensor_data_for_device:
-                sensors_data[sensor_data.sensor_id] = sensor_data
-
-
-        if not main_device_names:
+        if not sensor_data:
             raise LibreHardwareMonitorNoDevicesError from None
 
-        return LibreHardwareMonitorData(
-            main_device_names=list(main_device_names),
-            sensor_data=sensors_data
-        )
+        return LibreHardwareMonitorData(sensor_data=sensor_data)
 
 
-    def _parse_sensor_data(self, main_device: dict) -> list[LibreHardwareMonitorSensorData]:
+    def _parse_sensor_data(self, main_device: dict[str, Any]) -> list[LibreHardwareMonitorSensorData]:
         """Parse all sensors from a given device."""
         device_type = self._parse_device_type(main_device)
 
@@ -69,7 +61,7 @@ class LibreHardwareMonitorParser:
         return sensor_data_for_device
 
 
-    def _parse_device_type(self, main_device: dict) -> str:
+    def _parse_device_type(self, main_device: dict[str, Any]) -> str:
         """Parse the device type from the image url property."""
         device_type = ""
         if "/" in main_device[LHM_DEVICE_TYPE]:
@@ -77,7 +69,7 @@ class LibreHardwareMonitorParser:
         return device_type.upper() if device_type != "transparent" else "UNKNOWN"
 
 
-    def _flatten_sensors(self, device) -> list[dict[str, Any]]:
+    def _flatten_sensors(self, device: dict[str, Any]) -> list[dict[str, Any]]:
         """Recursively find all sensors."""
         if not device[LHM_CHILDREN]:
             return [device] if LHM_SENSOR_ID in device else []
@@ -86,3 +78,13 @@ class LibreHardwareMonitorParser:
             for child in device[LHM_CHILDREN]
             for sensor in self._flatten_sensors(child)
         ]
+
+
+    def parse_main_hardware_device_names(self, lhm_data: dict[str, Any]) -> list[str]:
+        """Get names of all main hardware devices (CPU, GPU, SSD...) exposed by LHM."""
+        main_devices = lhm_data[LHM_CHILDREN][0][LHM_CHILDREN]
+
+        if not main_devices:
+            raise LibreHardwareMonitorNoDevicesError from None
+
+        return [main_device[LHM_NAME] for main_device in main_devices]

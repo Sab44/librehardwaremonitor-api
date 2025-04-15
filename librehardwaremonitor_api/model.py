@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class LibreHardwareMonitorSensorData:
-    """Data class to hold all relevant sensor data."""
+    """Data class to hold all data for a specific sensor."""
     name: str
     value: str
     min: str
@@ -14,6 +14,5 @@ class LibreHardwareMonitorSensorData:
 
 @dataclass
 class LibreHardwareMonitorData:
-    """Data class to hold device names and sensor data."""
-    main_device_names: list[str]
+    """Data class that contains data for all sensors."""
     sensor_data: dict[str, LibreHardwareMonitorSensorData]
