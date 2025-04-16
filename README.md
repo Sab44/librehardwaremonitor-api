@@ -5,14 +5,17 @@ A Python library for interacting with the LibreHardwareMonitor API.
 This library provides a simple interface for fetching data from the API provided by the inbuilt LibreHardwareMonitor web server.
 
 ## Methods
-The library provides two callable methods to fetch data from your Libre Hardware Monitor instance:
+The library provides one callable method:
 
-* `get_data`: Returns a `LibreHardwareMonitorData` object containing all sensor data.
-* `get_main_hardware_devices`: Returns a `list` containing all names of main hardware devices.
+* `get_data`: Returns a `LibreHardwareMonitorData` object containing main device names and all sensor data from your Libre Hardware Monitor instance.
 
-`LibreHardwareMonitorData` has 1 property with the following structure:
+`LibreHardwareMonitorData` has 2 properties with the following structure:
 ```
 LibreHardwareMonitorData(
+    main_device_names: list[str] 
+    # for example: 
+    # ["AMD Ryzen 7 7800X3D", "NVIDIA GeForce RTX 4080 SUPER"]
+    
     sensor_data: dict[str, LibreHardwareMonitorSensorData] 
     # for example 
     # {
@@ -50,10 +53,8 @@ async def main():
     client = LibreHardwareMonitorClient("<HOSTNAME OR IP ADDRESS>", <PORT>)
     
     lhm_data = await client.get_data()
+    print(lhm_data.main_device_names)
     print(lhm_data.sensor_data)
-    
-    main_hardware_devices = await client.get_main_hardware_devices()
-    print(main_hardware_devices)
 
 asyncio.run(main())
 ```

@@ -16,19 +16,26 @@ class LibreHardwareMonitorParser:
 
     def parse_data(self, lhm_data: dict[str, Any]) -> LibreHardwareMonitorData:
         """Get data from all sensors across all devices."""
-        main_devices = lhm_data[LHM_CHILDREN][0][LHM_CHILDREN]
+        main_devices: list[dict[str, Any]] = lhm_data[LHM_CHILDREN][0][LHM_CHILDREN]
+        main_device_names: list[str] = []
 
-        sensor_data: dict[str, LibreHardwareMonitorSensorData] = {}
+        sensors_data: dict[str, LibreHardwareMonitorSensorData] = {}
         for main_device in main_devices:
-            sensors_for_device = self._parse_sensor_data(main_device)
+            sensor_data_for_device = self._parse_sensor_data(main_device)
 
-            for sensor in sensors_for_device:
-                sensor_data[sensor.sensor_id] = sensor
+            if sensor_data_for_device:
+                main_device_names.append(main_device[LHM_NAME])
 
-        if not sensor_data:
+            for sensor_data in sensor_data_for_device:
+                sensors_data[sensor_data.sensor_id] = sensor_data
+
+        if not sensors_data:
             raise LibreHardwareMonitorNoDevicesError from None
 
-        return LibreHardwareMonitorData(sensor_data=sensor_data)
+        return LibreHardwareMonitorData(
+            main_device_names=main_device_names,
+            sensor_data=sensors_data
+        )
 
 
     def _parse_sensor_data(self, main_device: dict[str, Any]) -> list[LibreHardwareMonitorSensorData]:
@@ -78,13 +85,3 @@ class LibreHardwareMonitorParser:
             for child in device[LHM_CHILDREN]
             for sensor in self._flatten_sensors(child)
         ]
-
-
-    def parse_main_hardware_device_names(self, lhm_data: dict[str, Any]) -> list[str]:
-        """Get names of all main hardware devices (CPU, GPU, SSD...) exposed by LHM."""
-        main_devices = lhm_data[LHM_CHILDREN][0][LHM_CHILDREN]
-
-        if not main_devices:
-            raise LibreHardwareMonitorNoDevicesError from None
-
-        return [main_device[LHM_NAME] for main_device in main_devices]

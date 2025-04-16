@@ -12,7 +12,9 @@ class LibreHardwareMonitorSensorData:
     device_type: str
     sensor_id: str
 
+
 @dataclass
 class LibreHardwareMonitorData:
-    """Data class that contains data for all sensors."""
+    """Data class to hold device names and data for all sensors."""
+    main_device_names: list[str]
     sensor_data: dict[str, LibreHardwareMonitorSensorData]
