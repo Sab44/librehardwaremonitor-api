@@ -55,3 +55,4 @@ class TestParser(unittest.TestCase):
         assert len([value for value in result.sensor_data.values() if value.device_name == "AMD Ryzen 7 7800X3D"]) == 72
         assert len([value for value in result.sensor_data.values() if value.device_name == "NVIDIA GeForce RTX 4080 SUPER"]) == 32
         assert len(result.sensor_data) == 141
+        assert "gpu-nvidia-0-control-1" in result.sensor_data

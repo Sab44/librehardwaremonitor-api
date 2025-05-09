@@ -1,3 +1,4 @@
+import re
 from typing import Any
 
 from librehardwaremonitor_api.errors import LibreHardwareMonitorNoDevicesError
@@ -45,9 +46,7 @@ class LibreHardwareMonitorParser:
         sensor_data_for_device: list[LibreHardwareMonitorSensorData] = []
         all_sensors_for_device = self._flatten_sensors(main_device)
         for sensor in all_sensors_for_device:
-            sensor_id = "-".join(sensor[LHM_SENSOR_ID].split("/")[1:]).replace(
-                "%", ""
-            )
+            sensor_id = re.sub(r"[^a-zA-Z0-9_-]", "", "-".join(sensor[LHM_SENSOR_ID].split("/")[1:]))
 
             unit = None
             if " " in sensor[LHM_VALUE]:
