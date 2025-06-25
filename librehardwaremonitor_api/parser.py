@@ -47,6 +47,9 @@ class LibreHardwareMonitorParser:
         all_sensors_for_device = self._flatten_sensors(main_device)
         for sensor in all_sensors_for_device:
             sensor_id = re.sub(r"[^a-zA-Z0-9_-]", "", "-".join(sensor[LHM_SENSOR_ID].split("/")[1:]))
+            # Workaround, as Hardware Device IDs are not part of the data.json, request submitted:
+            # https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/issues/1757
+            device_id = sensor_id.rsplit("-", 2)[0]
 
             unit = None
             if " " in sensor[LHM_VALUE]:
@@ -58,6 +61,7 @@ class LibreHardwareMonitorParser:
                 min=sensor[LHM_MIN].split(" ")[0],
                 max=sensor[LHM_MAX].split(" ")[0],
                 unit=unit,
+                device_id=device_id,
                 device_name=main_device[LHM_NAME],
                 device_type=device_type,
                 sensor_id=sensor_id,

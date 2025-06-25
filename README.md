@@ -25,6 +25,7 @@ LibreHardwareMonitorData(
     #         "min": "25,2", 
     #         "max": "76,4", 
     #         "unit": "W", 
+    #         "device_id": "amdcpu-0", 
     #         "device_name": "AMD Ryzen 7 7800X3D", 
     #         "device_type": "CPU",
     #         "sensor_id": "amdcpu-0-power-0"

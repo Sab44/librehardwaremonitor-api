@@ -56,3 +56,8 @@ class TestParser(unittest.TestCase):
         assert len([value for value in result.sensor_data.values() if value.device_name == "NVIDIA GeForce RTX 4080 SUPER"]) == 32
         assert len(result.sensor_data) == 141
         assert "gpu-nvidia-0-control-1" in result.sensor_data
+        assert result.sensor_data["gpu-nvidia-0-control-1"].device_id == "gpu-nvidia-0"
+        assert result.sensor_data["gpu-nvidia-0-control-1"].device_type == "NVIDIA"
+
+        device_ids = set([sensor_data.device_id for sensor_data in result.sensor_data.values()])
+        assert device_ids == {"lpc-nct6687d-0", "amdcpu-0", "gpu-nvidia-0"}

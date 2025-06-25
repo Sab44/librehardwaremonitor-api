@@ -8,6 +8,7 @@ class LibreHardwareMonitorSensorData:
     min: str
     max: str
     unit: str | None
+    device_id: str
     device_name: str
     device_type: str
     sensor_id: str
