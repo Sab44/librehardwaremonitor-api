@@ -2,7 +2,10 @@ import re
 from typing import Any
 
 from librehardwaremonitor_api.errors import LibreHardwareMonitorNoDevicesError
-from librehardwaremonitor_api.model import LibreHardwareMonitorSensorData, LibreHardwareMonitorData
+from librehardwaremonitor_api.model import DeviceId
+from librehardwaremonitor_api.model import DeviceName
+from librehardwaremonitor_api.model import LibreHardwareMonitorData
+from librehardwaremonitor_api.model import LibreHardwareMonitorSensorData
 
 LHM_CHILDREN = "Children"
 LHM_DEVICE_TYPE = "ImageURL"
@@ -17,24 +20,23 @@ class LibreHardwareMonitorParser:
 
     def parse_data(self, lhm_data: dict[str, Any]) -> LibreHardwareMonitorData:
         """Get data from all sensors across all devices."""
+        main_device_ids_and_names: dict[DeviceId, DeviceName] = {}
+
         main_devices: list[dict[str, Any]] = lhm_data[LHM_CHILDREN][0][LHM_CHILDREN]
-        main_device_names: list[str] = []
 
         sensors_data: dict[str, LibreHardwareMonitorSensorData] = {}
         for main_device in main_devices:
             sensor_data_for_device = self._parse_sensor_data(main_device)
 
-            if sensor_data_for_device:
-                main_device_names.append(main_device[LHM_NAME])
-
             for sensor_data in sensor_data_for_device:
                 sensors_data[sensor_data.sensor_id] = sensor_data
+                main_device_ids_and_names[DeviceId(sensor_data.device_id)] = DeviceName(main_device[LHM_NAME])
 
         if not sensors_data:
             raise LibreHardwareMonitorNoDevicesError from None
 
         return LibreHardwareMonitorData(
-            main_device_names=main_device_names,
+            main_device_ids_and_names=main_device_ids_and_names,
             sensor_data=sensors_data
         )
 

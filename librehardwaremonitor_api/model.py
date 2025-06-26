@@ -1,4 +1,8 @@
 from dataclasses import dataclass
+from typing import NewType
+
+DeviceId = NewType("DeviceId", str)
+DeviceName = NewType("DeviceName", str)
 
 @dataclass
 class LibreHardwareMonitorSensorData:
@@ -17,5 +21,5 @@ class LibreHardwareMonitorSensorData:
 @dataclass
 class LibreHardwareMonitorData:
     """Data class to hold device names and data for all sensors."""
-    main_device_names: list[str]
+    main_device_ids_and_names: dict[DeviceId, DeviceName]
     sensor_data: dict[str, LibreHardwareMonitorSensorData]

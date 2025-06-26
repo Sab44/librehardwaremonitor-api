@@ -1,9 +1,11 @@
+import json
 import unittest
 from typing import Any
 
 from librehardwaremonitor_api import LibreHardwareMonitorNoDevicesError
-from librehardwaremonitor_api.parser import LibreHardwareMonitorParser, LHM_CHILDREN
-import json
+from librehardwaremonitor_api.parser import LHM_CHILDREN
+from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
+
 
 class TestParser(unittest.TestCase):
 
@@ -16,15 +18,15 @@ class TestParser(unittest.TestCase):
 
     def test_device_without_children_or_sensor_id_is_ignored(self) -> None:
         self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN] = []
-        expected_main_devices = [
-            "AMD Ryzen 7 7800X3D",
-            "NVIDIA GeForce RTX 4080 SUPER"
-        ]
+        expected_main_device_ids_and_names = {
+            "amdcpu-0": "AMD Ryzen 7 7800X3D",
+            "gpu-nvidia-0": "NVIDIA GeForce RTX 4080 SUPER"
+        }
 
         result = self.parser.parse_data(self.data_json)
 
         assert result
-        assert result.main_device_names == expected_main_devices
+        assert result.main_device_ids_and_names == expected_main_device_ids_and_names
         assert len(set([value.device_name for value in result.sensor_data.values()])) == 2
         assert len([value for value in result.sensor_data.values() if value.device_name == "AMD Ryzen 7 7800X3D"]) == 72
         assert len([value for value in result.sensor_data.values() if value.device_name == "NVIDIA GeForce RTX 4080 SUPER"]) == 32
@@ -40,16 +42,16 @@ class TestParser(unittest.TestCase):
 
 
     def test_lhm_json_is_parsed_correctly(self) -> None:
-        expected_main_devices = [
-            "MSI MAG B650M MORTAR WIFI (MS-7D76)",
-            "AMD Ryzen 7 7800X3D",
-            "NVIDIA GeForce RTX 4080 SUPER"
-        ]
+        expected_main_device_ids_and_names = {
+            "lpc-nct6687d-0": "MSI MAG B650M MORTAR WIFI (MS-7D76)",
+            "amdcpu-0": "AMD Ryzen 7 7800X3D",
+            "gpu-nvidia-0": "NVIDIA GeForce RTX 4080 SUPER"
+        }
 
         result = self.parser.parse_data(self.data_json)
 
         assert result
-        assert result.main_device_names == expected_main_devices
+        assert result.main_device_ids_and_names == expected_main_device_ids_and_names
         assert len(set([value.device_name for value in result.sensor_data.values()])) == 3
         assert len([value for value in result.sensor_data.values() if value.device_name == "MSI MAG B650M MORTAR WIFI (MS-7D76)"]) == 37
         assert len([value for value in result.sensor_data.values() if value.device_name == "AMD Ryzen 7 7800X3D"]) == 72

@@ -2,7 +2,8 @@
 
 import aiohttp
 
-from librehardwaremonitor_api.errors import LibreHardwareMonitorConnectionError, LibreHardwareMonitorNoDevicesError
+from librehardwaremonitor_api.errors import LibreHardwareMonitorConnectionError
+from librehardwaremonitor_api.errors import LibreHardwareMonitorNoDevicesError
 from librehardwaremonitor_api.model import LibreHardwareMonitorData
 from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
 

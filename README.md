@@ -12,21 +12,25 @@ The library provides one callable method:
 `LibreHardwareMonitorData` has 2 properties with the following structure:
 ```
 LibreHardwareMonitorData(
-    main_device_names: list[str] 
-    # for example: 
-    # ["AMD Ryzen 7 7800X3D", "NVIDIA GeForce RTX 4080 SUPER"]
+    main_device_ids_and_names: dict[DeviceId, DeviceName]
+    # for example:
+    # {
+    #     "amdcpu-0": "AMD Ryzen 7 7800X3D",
+    #     "gpu-nvidia-0": "NVIDIA GeForce RTX 4080 SUPER"
+    # }
+    # the dictionary keys represent a unique device id.
     
-    sensor_data: dict[str, LibreHardwareMonitorSensorData] 
-    # for example 
+    sensor_data: dict[str, LibreHardwareMonitorSensorData]
+    # for example
     # {
     #     "amdcpu-0-power-0": {
-    #         "name": Package Power", 
-    #         "value": "25,6", 
-    #         "min": "25,2", 
-    #         "max": "76,4", 
-    #         "unit": "W", 
-    #         "device_id": "amdcpu-0", 
-    #         "device_name": "AMD Ryzen 7 7800X3D", 
+    #         "name": Package Power",
+    #         "value": "25,6",
+    #         "min": "25,2",
+    #         "max": "76,4",
+    #         "unit": "W",
+    #         "device_id": "amdcpu-0",
+    #         "device_name": "AMD Ryzen 7 7800X3D",
     #         "device_type": "CPU",
     #         "sensor_id": "amdcpu-0-power-0"
     #     },
@@ -54,7 +58,7 @@ async def main():
     client = LibreHardwareMonitorClient("<HOSTNAME OR IP ADDRESS>", <PORT>)
     
     lhm_data = await client.get_data()
-    print(lhm_data.main_device_names)
+    print(lhm_data.main_device_ids_and_names)
     print(lhm_data.sensor_data)
 
 asyncio.run(main())
