@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from types import MappingProxyType
 from typing import NewType
 
 DeviceId = NewType("DeviceId", str)
@@ -21,5 +22,5 @@ class LibreHardwareMonitorSensorData:
 @dataclass(frozen=True)
 class LibreHardwareMonitorData:
     """Data class to hold device names and data for all sensors."""
-    main_device_ids_and_names: dict[DeviceId, DeviceName]
-    sensor_data: dict[str, LibreHardwareMonitorSensorData]
+    main_device_ids_and_names: MappingProxyType[DeviceId, DeviceName]
+    sensor_data: MappingProxyType[str, LibreHardwareMonitorSensorData]
