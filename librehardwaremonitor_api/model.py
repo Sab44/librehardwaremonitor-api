@@ -4,7 +4,7 @@ from typing import NewType
 DeviceId = NewType("DeviceId", str)
 DeviceName = NewType("DeviceName", str)
 
-@dataclass
+@dataclass(frozen=True)
 class LibreHardwareMonitorSensorData:
     """Data class to hold all data for a specific sensor."""
     name: str
@@ -18,7 +18,7 @@ class LibreHardwareMonitorSensorData:
     sensor_id: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class LibreHardwareMonitorData:
     """Data class to hold device names and data for all sensors."""
     main_device_ids_and_names: dict[DeviceId, DeviceName]
