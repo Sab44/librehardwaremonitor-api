@@ -1784,8 +1784,8 @@
                   "id": 165,
                   "Text": "GPU PCIe Rx",
                   "Min": "50,0 KB/s",
-                  "Value": "100,0 KB/s",
-                  "Max": "99,3 MB/s",
+                  "Value": "100,0 MB/s",
+                  "Max": "199,3 MB/s",
                   "SensorId": "/gpu-nvidia/0/throughput/0",
                   "Type": "Throughput",
                   "ImageURL": "images/transparent.png",
@@ -1794,11 +1794,14 @@
                 {
                   "id": 166,
                   "Text": "GPU PCIe Tx",
-                  "Min": "50,0 KB/s",
-                  "Value": "650,0 KB/s",
-                  "Max": "115,8 MB/s",
+                  "Min": "50,0 MB/s",
+                  "Value": "300,0 MB/s",
+                  "Max": "667,2 MB/s",
                   "SensorId": "/gpu-nvidia/0/throughput/1",
                   "Type": "Throughput",
+                  "RawMin": "51201,0 B/s",
+                  "RawValue": "307200,0 B/s",
+                  "RawMax": "699648000,0 B/s",
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }

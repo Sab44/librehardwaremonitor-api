@@ -17,7 +17,7 @@ class TestParser(unittest.TestCase):
 
 
     def test_device_without_children_or_sensor_id_is_ignored(self) -> None:
-        self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN] = []
+        self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN] = []
         expected_main_device_ids_and_names = {
             "amdcpu-0": "AMD Ryzen 7 7800X3D",
             "gpu-nvidia-0": "NVIDIA GeForce RTX 4080 SUPER"
@@ -57,9 +57,24 @@ class TestParser(unittest.TestCase):
         assert len([value for value in result.sensor_data.values() if value.device_name == "AMD Ryzen 7 7800X3D"]) == 72
         assert len([value for value in result.sensor_data.values() if value.device_name == "NVIDIA GeForce RTX 4080 SUPER"]) == 32
         assert len(result.sensor_data) == 141
+
         assert "gpu-nvidia-0-control-1" in result.sensor_data
         assert result.sensor_data["gpu-nvidia-0-control-1"].device_id == "gpu-nvidia-0"
         assert result.sensor_data["gpu-nvidia-0-control-1"].device_type == "NVIDIA"
+
+        # test Throughput sensor without RawValue being available
+        assert "gpu-nvidia-0-throughput-0" in result.sensor_data
+        assert result.sensor_data["gpu-nvidia-0-throughput-0"].value == "100,0"
+        assert result.sensor_data["gpu-nvidia-0-throughput-0"].min == "50,0"
+        assert result.sensor_data["gpu-nvidia-0-throughput-0"].max == "199,3"
+        assert result.sensor_data["gpu-nvidia-0-throughput-0"].unit == "MB/s"
+
+        # test Throughput sensor with RawValue being available
+        assert "gpu-nvidia-0-throughput-1" in result.sensor_data
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].value == "300,0"
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].min == "50,0"
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].max == "683250,0"
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].unit == "KB/s"
 
         device_ids = set([sensor_data.device_id for sensor_data in result.sensor_data.values()])
         assert device_ids == {"lpc-nct6687d-0", "amdcpu-0", "gpu-nvidia-0"}

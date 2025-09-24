@@ -9,9 +9,12 @@ from librehardwaremonitor_api.model import LibreHardwareMonitorSensorData
 
 LHM_CHILDREN = "Children"
 LHM_DEVICE_TYPE = "ImageURL"
-LHM_MIN = "Min"
 LHM_MAX = "Max"
+LHM_MIN = "Min"
 LHM_NAME = "Text"
+LHM_RAW_MAX = "RawMax"
+LHM_RAW_MIN = "RawMin"
+LHM_RAW_VALUE = "RawValue"
 LHM_SENSOR_ID = "SensorId"
 LHM_TYPE = "Type"
 LHM_VALUE = "Value"
@@ -53,15 +56,39 @@ class LibreHardwareMonitorParser:
             # https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/issues/1757
             device_id = sensor_id.rsplit("-", 2)[0]
 
+            name: str = sensor[LHM_NAME]
+            type: str = sensor[LHM_TYPE]
+
+            value: str = sensor[LHM_VALUE].split(" ")[0]
+            min: str = sensor[LHM_MIN].split(" ")[0]
+            max: str = sensor[LHM_MAX].split(" ")[0]
+
             unit = None
             if " " in sensor[LHM_VALUE]:
                 unit = sensor[LHM_VALUE].split(" ")[1]
 
+            if type == "Throughput":
+                if raw_value := sensor.get(LHM_RAW_VALUE):
+                    value = raw_value.split(" ")[0]
+                    min = sensor[LHM_RAW_MIN].split(" ")[0]
+                    max = sensor[LHM_RAW_MAX].split(" ")[0]
+
+                    if "," in value:
+                        value = f"{(float(value.replace(',', '.')) / 1024):.1f}".replace('.', ',')
+                        min = f"{(float(min.replace(',', '.')) / 1024):.1f}".replace('.', ',')
+                        max = f"{(float(max.replace(',', '.')) / 1024):.1f}".replace('.', ',')
+                    else:
+                        value = f"{(float(value) / 1024):.1f}"
+                        min = f"{(float(min) / 1024):.1f}"
+                        max = f"{(float(max) / 1024):.1f}"
+
+                    unit = "KB/s"
+
             sensor_data = LibreHardwareMonitorSensorData(
-                name=f"{sensor[LHM_NAME]} {sensor[LHM_TYPE]}",
-                value=sensor[LHM_VALUE].split(" ")[0],
-                min=sensor[LHM_MIN].split(" ")[0],
-                max=sensor[LHM_MAX].split(" ")[0],
+                name=f"{name} {type}",
+                value=value,
+                min=min,
+                max=max,
                 unit=unit,
                 device_id=device_id,
                 device_name=main_device[LHM_NAME],
