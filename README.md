@@ -1,5 +1,5 @@
 # LibreHardwareMonitor API Client
-A Python library for interacting with the LibreHardwareMonitor API.
+A Python library for interacting with the [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) API.
 
 ## Overview
 This library provides a simple interface for fetching data from the API provided by the inbuilt LibreHardwareMonitor web server.
