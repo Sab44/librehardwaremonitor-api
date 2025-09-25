@@ -1359,6 +1359,7 @@
           "Min": "",
           "Value": "",
           "Max": "",
+          "HardwareId": "/gpu-nvidia/test/0",
           "ImageURL": "images_icon/nvidia.png",
           "Children": [
             {
