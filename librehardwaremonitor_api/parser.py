@@ -1,5 +1,6 @@
 import re
 from typing import Any
+from typing import Optional
 
 from librehardwaremonitor_api.errors import LibreHardwareMonitorNoDevicesError
 from librehardwaremonitor_api.model import DeviceId
@@ -9,6 +10,7 @@ from librehardwaremonitor_api.model import LibreHardwareMonitorSensorData
 
 LHM_CHILDREN = "Children"
 LHM_DEVICE_TYPE = "ImageURL"
+LHM_HARDWARE_ID = "HardwareId"
 LHM_MAX = "Max"
 LHM_MIN = "Min"
 LHM_NAME = "Text"
@@ -47,14 +49,16 @@ class LibreHardwareMonitorParser:
     def _parse_sensor_data(self, main_device: dict[str, Any]) -> list[LibreHardwareMonitorSensorData]:
         """Parse all sensors from a given device."""
         device_type = self._parse_device_type(main_device)
+        # This will only work for LHM versions > 0.9.4, otherwise we parse device id from sensor id below
+        device_id = self._format_id(main_device.get(LHM_HARDWARE_ID))
 
         sensor_data_for_device: list[LibreHardwareMonitorSensorData] = []
         all_sensors_for_device = self._flatten_sensors(main_device)
         for sensor in all_sensors_for_device:
             sensor_id = re.sub(r"[^a-zA-Z0-9_-]", "", "-".join(sensor[LHM_SENSOR_ID].split("/")[1:]))
-            # Workaround, as Hardware Device IDs are not part of the data.json, request submitted:
-            # https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/issues/1757
-            device_id = sensor_id.rsplit("-", 2)[0]
+            # For versions <= 0.9.4 use legacy method of parsing device id from sensor id
+            if not device_id:
+                device_id = sensor_id.rsplit("-", 2)[0]
 
             name: str = sensor[LHM_NAME]
             type: str = sensor[LHM_TYPE]
@@ -99,6 +103,12 @@ class LibreHardwareMonitorParser:
 
         return sensor_data_for_device
 
+
+    def _format_id(self, id: Optional[str]) -> Optional[str]:
+        """Format a given ID to remove slashes and undesired characters."""
+        if not id:
+            return None
+        return re.sub(r"[^a-zA-Z0-9_-]", "", "-".join(id.split("/")[1:]))
 
     def _parse_device_type(self, main_device: dict[str, Any]) -> str:
         """Parse the device type from the image url property."""

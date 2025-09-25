@@ -23,7 +23,7 @@ class TestParser(unittest.TestCase):
         self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN] = []
         expected_main_device_ids_and_names = {
             "amdcpu-0": "AMD Ryzen 7 7800X3D",
-            "gpu-nvidia-0": "NVIDIA GeForce RTX 4080 SUPER"
+            "gpu-nvidia-test-0": "NVIDIA GeForce RTX 4080 SUPER"
         }
 
         result = self.parser.parse_data(self.data_json)
@@ -48,7 +48,7 @@ class TestParser(unittest.TestCase):
         expected_main_device_ids_and_names = {
             "lpc-nct6687d-0": "MSI MAG B650M MORTAR WIFI (MS-7D76)",
             "amdcpu-0": "AMD Ryzen 7 7800X3D",
-            "gpu-nvidia-0": "NVIDIA GeForce RTX 4080 SUPER"
+            "gpu-nvidia-test-0": "NVIDIA GeForce RTX 4080 SUPER"
         }
 
         result = self.parser.parse_data(self.data_json)
@@ -62,7 +62,7 @@ class TestParser(unittest.TestCase):
         assert len(result.sensor_data) == 141
 
         assert "gpu-nvidia-0-control-1" in result.sensor_data
-        assert result.sensor_data["gpu-nvidia-0-control-1"].device_id == "gpu-nvidia-0"
+        assert result.sensor_data["gpu-nvidia-0-control-1"].device_id == "gpu-nvidia-test-0"
         assert result.sensor_data["gpu-nvidia-0-control-1"].device_type == "NVIDIA"
 
         # test Throughput sensor without RawValue being available
@@ -80,4 +80,4 @@ class TestParser(unittest.TestCase):
         assert result.sensor_data["gpu-nvidia-0-throughput-1"].unit == "KB/s"
 
         device_ids = set([sensor_data.device_id for sensor_data in result.sensor_data.values()])
-        assert device_ids == {"lpc-nct6687d-0", "amdcpu-0", "gpu-nvidia-0"}
+        assert device_ids == {"lpc-nct6687d-0", "amdcpu-0", "gpu-nvidia-test-0"}
