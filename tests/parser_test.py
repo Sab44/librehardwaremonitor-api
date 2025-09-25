@@ -1,5 +1,6 @@
 import json
 import unittest
+from pathlib import Path
 from typing import Any
 
 from librehardwaremonitor_api import LibreHardwareMonitorNoDevicesError
@@ -9,9 +10,11 @@ from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
 
 class TestParser(unittest.TestCase):
 
+    BASE_DIR = Path(__file__).absolute().parent
+
     def setUp(self) -> None:
         self.data_json: dict[str, Any] = {}
-        with open('librehardwaremonitor.json') as f:
+        with open(f'{self.BASE_DIR}/librehardwaremonitor.json') as f:
             self.data_json: dict[str, Any] = json.load(f)
         self.parser = LibreHardwareMonitorParser()
 
