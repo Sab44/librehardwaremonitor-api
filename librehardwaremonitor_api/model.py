@@ -9,9 +9,9 @@ DeviceName = NewType("DeviceName", str)
 class LibreHardwareMonitorSensorData:
     """Data class to hold all data for a specific sensor."""
     name: str
-    value: str
-    min: str
-    max: str
+    value: str | None
+    min: str | None
+    max: str | None
     unit: str | None
     device_id: str
     device_name: str

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='librehardwaremonitor-api',
-    version='1.4.0',
+    version='1.5.0',
     package_data={'librehardwaremonitor_api': ['py.typed']},
     packages=['librehardwaremonitor_api'],
     install_requires=[

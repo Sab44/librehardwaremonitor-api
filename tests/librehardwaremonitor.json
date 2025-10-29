@@ -959,9 +959,9 @@
                 {
                   "id": 89,
                   "Text": "Core #8",
-                  "Min": "3149,9 MHz",
-                  "Value": "4724,9 MHz",
-                  "Max": "5024,9 MHz",
+                  "Min": "NaN MHz",
+                  "Value": "NaN MHz",
+                  "Max": "NaN MHz",
                   "SensorId": "/amdcpu/0/clock/11",
                   "Type": "Clock",
                   "ImageURL": "images/transparent.png",
@@ -1795,14 +1795,60 @@
                 {
                   "id": 166,
                   "Text": "GPU PCIe Tx",
-                  "Min": "50,0 MB/s",
-                  "Value": "300,0 MB/s",
-                  "Max": "667,2 MB/s",
+                  "Min": "58,0 MB/s",
+                  "Value": "222,0 MB/s",
+                  "Max": "367,2 MB/s",
                   "SensorId": "/gpu-nvidia/0/throughput/1",
                   "Type": "Throughput",
                   "RawMin": "51201,0 B/s",
                   "RawValue": "307200,0 B/s",
                   "RawMax": "699648000,0 B/s",
+                  "ImageURL": "images/transparent.png",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 165,
+          "Text": "DELL G8VCF6C",
+          "Min": "",
+          "Value": "",
+          "Max": "",
+          "HardwareId": "/battery/DELL-G8VCF6C_1",
+          "ImageURL": "images_icon/battery.png",
+          "Children": [
+            {
+              "id": 166,
+              "Text": "Times",
+              "Min": "",
+              "Value": "",
+              "Max": "",
+              "ImageURL": "images_icon/power.png",
+              "Children": [
+                {
+                  "id": 167,
+                  "Text": "Test Remaining Time (1)",
+                  "Min": "0:43:16",
+                  "Value": "2:02:31",
+                  "Max": "12:03:02",
+                  "SensorId": "/battery/DELL-G8VCF6C_1/timespan/0",
+                  "Type": "TimeSpan",
+                  "ImageURL": "images/transparent.png",
+                  "Children": []
+                },
+                {
+                  "id": 168,
+                  "Text": "Test Remaining Time (2)",
+                  "Min": "test_should_not_be_relevant",
+                  "Value": "test_should_not_be_relevant",
+                  "Max": "test_should_not_be_relevant",
+                  "SensorId": "/battery/DELL-G8VCF6C_1/timespan/1",
+                  "Type": "TimeSpan",
+                  "RawMin": "2596",
+                  "RawValue": "3751",
+                  "RawMax": "3782",
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }

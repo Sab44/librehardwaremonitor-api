@@ -63,9 +63,14 @@ class LibreHardwareMonitorParser:
             name: str = sensor[LHM_NAME]
             type: str = sensor[LHM_TYPE]
 
-            value: str = sensor[LHM_VALUE].split(" ")[0]
-            min: str = sensor[LHM_MIN].split(" ")[0]
-            max: str = sensor[LHM_MAX].split(" ")[0]
+            value: str | None = sensor[LHM_VALUE].split(" ")[0]
+            min: str | None = sensor[LHM_MIN].split(" ")[0]
+            max: str | None = sensor[LHM_MAX].split(" ")[0]
+
+            # Replace comma decimal separators e.g. in german locale
+            value = value.replace(',', '.')
+            min = min.replace(',', '.')
+            max = max.replace(',', '.')
 
             unit = None
             if " " in sensor[LHM_VALUE]:
@@ -73,20 +78,40 @@ class LibreHardwareMonitorParser:
 
             if type == "Throughput":
                 if raw_value := sensor.get(LHM_RAW_VALUE):
-                    value = raw_value.split(" ")[0]
-                    min = sensor[LHM_RAW_MIN].split(" ")[0]
-                    max = sensor[LHM_RAW_MAX].split(" ")[0]
-
-                    if "," in value:
-                        value = f"{(float(value.replace(',', '.')) / 1024):.1f}".replace('.', ',')
-                        min = f"{(float(min.replace(',', '.')) / 1024):.1f}".replace('.', ',')
-                        max = f"{(float(max.replace(',', '.')) / 1024):.1f}".replace('.', ',')
-                    else:
-                        value = f"{(float(value) / 1024):.1f}"
-                        min = f"{(float(min) / 1024):.1f}"
-                        max = f"{(float(max) / 1024):.1f}"
-
                     unit = "KB/s"
+
+                    raw_value = raw_value.split(" ")[0].replace(',', '.')
+                    raw_min = sensor[LHM_RAW_MIN].split(" ")[0].replace(',', '.')
+                    raw_max = sensor[LHM_RAW_MAX].split(" ")[0].replace(',', '.')
+
+                    try:
+                        normalized_value = f"{(float(raw_value) / 1024):.1f}"
+                        normalized_min = f"{(float(raw_min) / 1024):.1f}"
+                        normalized_max = f"{(float(raw_max) / 1024):.1f}"
+
+                        value = normalized_value
+                        min = normalized_min
+                        max = normalized_max
+                    except ValueError:
+                        value = None
+                        min = None
+                        max = None
+
+            elif type == "TimeSpan":
+                unit = "s"
+
+                if raw_value := sensor.get(LHM_RAW_VALUE):
+                    value = raw_value
+                    min = sensor[LHM_RAW_MIN]
+                    max = sensor[LHM_RAW_MAX]
+                else:
+                    value = self._convert_to_seconds(value)
+                    min = self._convert_to_seconds(min)
+                    max = self._convert_to_seconds(max)
+
+            value = self._ensure_value_is_numerical(value)
+            min = self._ensure_value_is_numerical(min)
+            max = self._ensure_value_is_numerical(max)
 
             sensor_data = LibreHardwareMonitorSensorData(
                 name=f"{name} {type}",
@@ -103,6 +128,17 @@ class LibreHardwareMonitorParser:
 
         return sensor_data_for_device
 
+    def _ensure_value_is_numerical(self, value: str | None) -> str | None:
+        """Ensure a given string holds a numerical value."""
+        if value is None or value == "NaN":
+            return None
+
+        try:
+            _ = float(value)
+        except ValueError:
+            return None
+
+        return value
 
     def _format_id(self, id: Optional[str]) -> Optional[str]:
         """Format a given ID to remove slashes and undesired characters."""
@@ -127,3 +163,23 @@ class LibreHardwareMonitorParser:
             for child in device[LHM_CHILDREN]
             for sensor in self._flatten_sensors(child)
         ]
+
+    def _convert_to_seconds(self, timespan: str) -> str | None:
+        """Convert formatted timespan to seconds."""
+        hours_minutes_seconds = timespan.split(":")
+
+        if len(hours_minutes_seconds) != 3:
+            return None
+
+        try:
+            hours = int(hours_minutes_seconds[0])
+            minutes = int(hours_minutes_seconds[1])
+            seconds = int(hours_minutes_seconds[2])
+
+            converted_to_seconds = hours * 3600 + minutes * 60 + seconds
+            return str(converted_to_seconds)
+        except ValueError:
+            return None
+
+
+
