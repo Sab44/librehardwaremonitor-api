@@ -25,9 +25,9 @@ LibreHardwareMonitorData(
     # {
     #     "amdcpu-0-power-0": {
     #         "name": Package Power",
-    #         "value": "25,6",
-    #         "min": "25,2",
-    #         "max": "76,4",
+    #         "value": "25.6",
+    #         "min": "25.2",
+    #         "max": "76.4",
     #         "unit": "W",
     #         "device_id": "amdcpu-0",
     #         "device_name": "AMD Ryzen 7 7800X3D",
