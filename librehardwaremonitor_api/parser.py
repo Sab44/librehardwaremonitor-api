@@ -26,11 +26,11 @@ class LibreHardwareMonitorParser:
 
     def parse_data(self, lhm_data: dict[str, Any]) -> LibreHardwareMonitorData:
         """Get data from all sensors across all devices."""
+        computer_name = lhm_data[LHM_CHILDREN][0][LHM_NAME]
         main_device_ids_and_names: dict[DeviceId, DeviceName] = {}
+        sensors_data: dict[str, LibreHardwareMonitorSensorData] = {}
 
         main_devices: list[dict[str, Any]] = lhm_data[LHM_CHILDREN][0][LHM_CHILDREN]
-
-        sensors_data: dict[str, LibreHardwareMonitorSensorData] = {}
         for main_device in main_devices:
             sensor_data_for_device = self._parse_sensor_data(main_device)
 
@@ -42,6 +42,7 @@ class LibreHardwareMonitorParser:
             raise LibreHardwareMonitorNoDevicesError from None
 
         return LibreHardwareMonitorData(
+            computer_name=computer_name,
             main_device_ids_and_names=MappingProxyType(main_device_ids_and_names),
             sensor_data=MappingProxyType(sensors_data)
         )

@@ -22,5 +22,6 @@ class LibreHardwareMonitorSensorData:
 @dataclass(frozen=True)
 class LibreHardwareMonitorData:
     """Data class to hold device names and data for all sensors."""
+    computer_name: str
     main_device_ids_and_names: MappingProxyType[DeviceId, DeviceName]
     sensor_data: MappingProxyType[str, LibreHardwareMonitorSensorData]

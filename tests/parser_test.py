@@ -19,6 +19,13 @@ class TestParser(unittest.TestCase):
         self.parser = LibreHardwareMonitorParser()
 
 
+    def test_computer_name_is_parsed(self) -> None:
+        result = self.parser.parse_data(self.data_json)
+        print(result.computer_name)
+
+        assert result.computer_name == "COMPUTER"
+
+
     def test_device_without_children_or_sensor_id_is_ignored(self) -> None:
         self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN] = []
         expected_main_device_ids_and_names = {

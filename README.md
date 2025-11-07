@@ -9,9 +9,12 @@ The library provides one callable method:
 
 * `get_data`: Returns a `LibreHardwareMonitorData` object containing main device names and all sensor data from your Libre Hardware Monitor instance.
 
-`LibreHardwareMonitorData` has 2 properties with the following structure:
+`LibreHardwareMonitorData` has 3 properties with the following structure:
 ```
 LibreHardwareMonitorData(
+    computer_name: str
+    # for example: "MY_COMPUTER"
+    
     main_device_ids_and_names: dict[DeviceId, DeviceName]
     # for example:
     # {
