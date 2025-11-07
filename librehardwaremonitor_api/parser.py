@@ -1,4 +1,5 @@
 import re
+from types import MappingProxyType
 from typing import Any
 from typing import Optional
 
@@ -41,8 +42,8 @@ class LibreHardwareMonitorParser:
             raise LibreHardwareMonitorNoDevicesError from None
 
         return LibreHardwareMonitorData(
-            main_device_ids_and_names=main_device_ids_and_names,
-            sensor_data=sensors_data
+            main_device_ids_and_names=MappingProxyType(main_device_ids_and_names),
+            sensor_data=MappingProxyType(sensors_data)
         )
 
 
