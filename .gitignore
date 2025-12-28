@@ -54,7 +54,6 @@ test-results.xml
 test-output.xml
 pytest-*.txt
 
-.python-version
 .tool-versions
 test.py
 
