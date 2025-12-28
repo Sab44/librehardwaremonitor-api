@@ -69,3 +69,8 @@ asyncio.run(main())
 
 ## TODO
 * implement basic auth
+
+## Development
+
+This package uses uv as project manager.  
+To set up a dev environment, clone the project and run `uv sync`.
