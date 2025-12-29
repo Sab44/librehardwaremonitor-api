@@ -73,4 +73,16 @@ asyncio.run(main())
 ## Development
 
 This package uses uv as project manager.  
-To set up a dev environment, clone the project and run `uv sync`.
+To set up a dev environment, clone the project and run 
+````
+uv sync
+````
+inside the project's root directory.  
+Set up pre-commit hooks with:
+```
+uv run pre-commit install
+```
+Optionally, execute manually via:
+```
+uv run pre-commit run --all-files
+```
