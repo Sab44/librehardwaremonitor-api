@@ -22,8 +22,8 @@ LHM_SENSOR_ID = "SensorId"
 LHM_TYPE = "Type"
 LHM_VALUE = "Value"
 
-class LibreHardwareMonitorParser:
 
+class LibreHardwareMonitorParser:
     def parse_data(self, lhm_data: dict[str, Any]) -> LibreHardwareMonitorData:
         """Get data from all sensors across all devices."""
         computer_name = lhm_data[LHM_CHILDREN][0][LHM_NAME]
@@ -36,7 +36,10 @@ class LibreHardwareMonitorParser:
 
             for sensor_data in sensor_data_for_device:
                 sensors_data[sensor_data.sensor_id] = sensor_data
-                main_device_ids_and_names[DeviceId(sensor_data.device_id)] = DeviceName(main_device[LHM_NAME])
+
+                main_device_id = DeviceId(sensor_data.device_id)
+                main_device_name = DeviceName(main_device[LHM_NAME])
+                main_device_ids_and_names[main_device_id] = main_device_name
 
         if not sensors_data:
             raise LibreHardwareMonitorNoDevicesError from None
@@ -44,9 +47,8 @@ class LibreHardwareMonitorParser:
         return LibreHardwareMonitorData(
             computer_name=computer_name,
             main_device_ids_and_names=MappingProxyType(main_device_ids_and_names),
-            sensor_data=MappingProxyType(sensors_data)
+            sensor_data=MappingProxyType(sensors_data),
         )
-
 
     def _parse_sensor_data(self, main_device: dict[str, Any]) -> list[LibreHardwareMonitorSensorData]:
         """Parse all sensors from a given device."""
@@ -70,9 +72,9 @@ class LibreHardwareMonitorParser:
             max: str | None = sensor[LHM_MAX].split(" ")[0]
 
             # Replace comma decimal separators e.g. in german locale
-            value = value.replace(',', '.')
-            min = min.replace(',', '.')
-            max = max.replace(',', '.')
+            value = value.replace(",", ".") if value is not None else None
+            min = min.replace(",", ".") if min is not None else None
+            max = max.replace(",", ".") if max is not None else None
 
             unit = None
             if " " in sensor[LHM_VALUE]:
@@ -82,9 +84,9 @@ class LibreHardwareMonitorParser:
                 if raw_value := sensor.get(LHM_RAW_VALUE):
                     unit = "KB/s"
 
-                    raw_value = raw_value.split(" ")[0].replace(',', '.')
-                    raw_min = sensor[LHM_RAW_MIN].split(" ")[0].replace(',', '.')
-                    raw_max = sensor[LHM_RAW_MAX].split(" ")[0].replace(',', '.')
+                    raw_value = raw_value.split(" ")[0].replace(",", ".")
+                    raw_min = sensor[LHM_RAW_MIN].split(" ")[0].replace(",", ".")
+                    raw_max = sensor[LHM_RAW_MAX].split(" ")[0].replace(",", ".")
 
                     try:
                         normalized_value = f"{(float(raw_value) / 1024):.1f}"
@@ -155,19 +157,17 @@ class LibreHardwareMonitorParser:
             device_type = main_device[LHM_DEVICE_TYPE].split("/")[1].split(".")[0]
         return device_type.upper() if device_type != "transparent" else "UNKNOWN"
 
-
     def _flatten_sensors(self, device: dict[str, Any]) -> list[dict[str, Any]]:
         """Recursively find all sensors."""
         if not device[LHM_CHILDREN]:
             return [device] if LHM_SENSOR_ID in device else []
-        return [
-            sensor
-            for child in device[LHM_CHILDREN]
-            for sensor in self._flatten_sensors(child)
-        ]
+        return [sensor for child in device[LHM_CHILDREN] for sensor in self._flatten_sensors(child)]
 
-    def _convert_to_seconds(self, timespan: str) -> str | None:
+    def _convert_to_seconds(self, timespan: str | None) -> str | None:
         """Convert formatted timespan to seconds."""
+        if timespan is None:
+            return None
+
         hours_minutes_seconds = timespan.split(":")
 
         if len(hours_minutes_seconds) != 3:
@@ -182,6 +182,3 @@ class LibreHardwareMonitorParser:
             return str(converted_to_seconds)
         except ValueError:
             return None
-
-
-

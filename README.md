@@ -14,7 +14,7 @@ The library provides one callable method:
 LibreHardwareMonitorData(
     computer_name: str
     # for example: "MY_COMPUTER"
-    
+
     main_device_ids_and_names: dict[DeviceId, DeviceName]
     # for example:
     # {
@@ -22,7 +22,7 @@ LibreHardwareMonitorData(
     #     "gpu-nvidia-0": "NVIDIA GeForce RTX 4080 SUPER"
     # }
     # the dictionary keys represent a unique device id.
-    
+
     sensor_data: dict[str, LibreHardwareMonitorSensorData]
     # for example
     # {
@@ -59,7 +59,7 @@ from librehardwaremonitor_api import LibreHardwareMonitorClient
 
 async def main():
     client = LibreHardwareMonitorClient("<HOSTNAME OR IP ADDRESS>", <PORT>)
-    
+
     lhm_data = await client.get_data()
     print(lhm_data.main_device_ids_and_names)
     print(lhm_data.sensor_data)

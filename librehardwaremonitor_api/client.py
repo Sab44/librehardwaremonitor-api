@@ -19,7 +19,6 @@ class LibreHardwareMonitorClient:
         self._timeout = aiohttp.ClientTimeout(total=DEFAULT_TIMEOUT)
         self._parser = LibreHardwareMonitorParser()
 
-
     async def get_data(self) -> LibreHardwareMonitorData:
         """Get the latest data from the LibreHardwareMonitor API."""
         try:
@@ -31,4 +30,3 @@ class LibreHardwareMonitorClient:
             raise
         except Exception as exception:  # pylint: disable=broad-except
             raise LibreHardwareMonitorConnectionError(exception) from exception
-

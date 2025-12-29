@@ -15,10 +15,16 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp",
+    "pre-commit"
 ]
 
 [project.urls]
 Homepage = "https://github.com/Sab44/librehardwaremonitor-api"
+
+[tool.ruff]
+line-length = 110
+indent-width = 4
+target-version = "py311"
 
 [build-system]
 requires = ["hatchling"]

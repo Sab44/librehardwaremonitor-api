@@ -9,15 +9,13 @@ from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
 
 
 class TestParser(unittest.TestCase):
-
     BASE_DIR = Path(__file__).absolute().parent
 
     def setUp(self) -> None:
         self.data_json: dict[str, Any] = {}
-        with open(f'{self.BASE_DIR}/librehardwaremonitor.json') as f:
-            self.data_json: dict[str, Any] = json.load(f)
+        with open(f"{self.BASE_DIR}/librehardwaremonitor.json") as f:
+            self.data_json = json.load(f)
         self.parser = LibreHardwareMonitorParser()
-
 
     def test_computer_name_is_parsed(self) -> None:
         result = self.parser.parse_data(self.data_json)
@@ -25,24 +23,25 @@ class TestParser(unittest.TestCase):
 
         assert result.computer_name == "COMPUTER"
 
-
     def test_device_without_children_or_sensor_id_is_ignored(self) -> None:
         self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][0][LHM_CHILDREN] = []
         expected_main_device_ids_and_names = {
             "amdcpu-0": "AMD Ryzen 7 7800X3D",
             "gpu-nvidia-test-0": "NVIDIA GeForce RTX 4080 SUPER",
-            "battery-DELL-G8VCF6C_1": "DELL G8VCF6C"
+            "battery-DELL-G8VCF6C_1": "DELL G8VCF6C",
         }
 
         result = self.parser.parse_data(self.data_json)
 
         assert result
         assert result.main_device_ids_and_names == expected_main_device_ids_and_names
-        assert len(set([value.device_name for value in result.sensor_data.values()])) == 3
-        assert len([value for value in result.sensor_data.values() if value.device_name == "AMD Ryzen 7 7800X3D"]) == 72
-        assert len([value for value in result.sensor_data.values() if value.device_name == "NVIDIA GeForce RTX 4080 SUPER"]) == 32
-        assert len(result.sensor_data) == 106
 
+        sensor_data = result.sensor_data.values()
+        assert len(set([value.device_name for value in result.sensor_data.values()])) == 3
+        assert sum(value.device_name == "AMD Ryzen 7 7800X3D" for value in sensor_data) == 72
+        assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 32
+        assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 2
+        assert len(result.sensor_data) == 106
 
     def test_error_is_raised_when_no_devices_with_sensors_are_available(self) -> None:
         del self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][1:]
@@ -51,24 +50,25 @@ class TestParser(unittest.TestCase):
         with self.assertRaises(LibreHardwareMonitorNoDevicesError):
             _ = self.parser.parse_data(self.data_json)
 
-
     def test_lhm_json_is_parsed_correctly(self) -> None:
         expected_main_device_ids_and_names = {
             "lpc-nct6687d-0": "MSI MAG B650M MORTAR WIFI (MS-7D76)",
             "amdcpu-0": "AMD Ryzen 7 7800X3D",
             "gpu-nvidia-test-0": "NVIDIA GeForce RTX 4080 SUPER",
-            "battery-DELL-G8VCF6C_1": "DELL G8VCF6C"
+            "battery-DELL-G8VCF6C_1": "DELL G8VCF6C",
         }
 
         result = self.parser.parse_data(self.data_json)
 
         assert result
         assert result.main_device_ids_and_names == expected_main_device_ids_and_names
-        assert len(set([value.device_name for value in result.sensor_data.values()])) == 4
-        assert len([value for value in result.sensor_data.values() if value.device_name == "MSI MAG B650M MORTAR WIFI (MS-7D76)"]) == 37
-        assert len([value for value in result.sensor_data.values() if value.device_name == "AMD Ryzen 7 7800X3D"]) == 72
-        assert len([value for value in result.sensor_data.values() if value.device_name == "NVIDIA GeForce RTX 4080 SUPER"]) == 32
-        assert len([value for value in result.sensor_data.values() if value.device_name == "DELL G8VCF6C"]) == 2
+
+        sensor_data = result.sensor_data.values()
+        assert len(set([value.device_name for value in sensor_data])) == 4
+        assert sum(value.device_name == "MSI MAG B650M MORTAR WIFI (MS-7D76)" for value in sensor_data) == 37
+        assert sum(value.device_name == "AMD Ryzen 7 7800X3D" for value in sensor_data) == 72
+        assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 32
+        assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 2
         assert len(result.sensor_data) == 143
 
         assert "gpu-nvidia-0-control-1" in result.sensor_data
@@ -114,4 +114,9 @@ class TestParser(unittest.TestCase):
         assert result.sensor_data["amdcpu-0-clock-11"].max is None
 
         device_ids = set([sensor_data.device_id for sensor_data in result.sensor_data.values()])
-        assert device_ids == {"lpc-nct6687d-0", "amdcpu-0", "gpu-nvidia-test-0", "battery-DELL-G8VCF6C_1"}
+        assert device_ids == {
+            "lpc-nct6687d-0",
+            "amdcpu-0",
+            "gpu-nvidia-test-0",
+            "battery-DELL-G8VCF6C_1",
+        }
