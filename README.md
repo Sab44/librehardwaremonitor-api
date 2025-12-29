@@ -7,7 +7,7 @@ This library provides a simple interface for fetching data from the API provided
 ## Methods
 The library provides one callable method:
 
-* `get_data`: Returns a `LibreHardwareMonitorData` object containing main device names and all sensor data from your Libre Hardware Monitor instance.
+* `get_data`: Returns a `LibreHardwareMonitorData` object containing the computer name, main hardware device names and all sensor data from your Libre Hardware Monitor instance.
 
 `LibreHardwareMonitorData` has 3 properties with the following structure:
 ```
@@ -61,6 +61,7 @@ async def main():
     client = LibreHardwareMonitorClient("<HOSTNAME OR IP ADDRESS>", <PORT>)
 
     lhm_data = await client.get_data()
+    print(lhm_data.computer_name)
     print(lhm_data.main_device_ids_and_names)
     print(lhm_data.sensor_data)
 
