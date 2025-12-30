@@ -1,0 +1,25 @@
+name: Unit tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Run unit tests
+        run: uv run python -m unittest discover -s tests -p "*_test.py" -t .
