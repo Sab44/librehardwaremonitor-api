@@ -1,6 +1,6 @@
 [project]
 name = "librehardwaremonitor-api"
-version = "1.7.1"
+version = "1.7.2"
 description = "A Python API client for LibreHardwareMonitor"
 readme = "README.md"
 license = "MIT"
