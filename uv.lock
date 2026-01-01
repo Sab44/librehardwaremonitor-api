@@ -287,18 +287,22 @@ wheels = [
 
 [[package]]
 name = "librehardwaremonitor-api"
-version = "1.7.2"
+version = "1.8.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
+]
+
+[package.dev-dependencies]
+dev = [
     { name = "pre-commit" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "aiohttp" },
-    { name = "pre-commit" },
-]
+requires-dist = [{ name = "aiohttp" }]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pre-commit" }]
 
 [[package]]
 name = "multidict"

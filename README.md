@@ -8,6 +8,7 @@ This library provides a simple interface for fetching data from the API provided
 The library provides one callable method:
 
 * `get_data`: Returns a `LibreHardwareMonitorData` object containing the computer name, main hardware device names and all sensor data from your Libre Hardware Monitor instance.
+  * Optional parameters: `username` and `password` if you have set up authentication for the webserver in Libre Hardware Monitor.
 
 `LibreHardwareMonitorData` has 3 properties with the following structure:
 ```
@@ -67,9 +68,6 @@ async def main():
 
 asyncio.run(main())
 ```
-
-## TODO
-* implement basic auth
 
 ## Development
 

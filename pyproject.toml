@@ -1,6 +1,6 @@
 [project]
 name = "librehardwaremonitor-api"
-version = "1.7.2"
+version = "1.8.0"
 description = "A Python API client for LibreHardwareMonitor"
 readme = "README.md"
 license = "MIT"
@@ -14,8 +14,12 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "aiohttp",
-    "pre-commit"
+    "aiohttp"
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit",
 ]
 
 [project.urls]
