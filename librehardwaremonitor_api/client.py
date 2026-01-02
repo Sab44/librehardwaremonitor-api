@@ -11,6 +11,9 @@ from librehardwaremonitor_api.errors import LibreHardwareMonitorUnauthorizedErro
 from librehardwaremonitor_api.model import LibreHardwareMonitorData
 from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
 
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
+
 DEFAULT_TIMEOUT = 5
 
 
@@ -27,7 +30,7 @@ class LibreHardwareMonitorClient:
     ) -> None:
         """Initialize the API."""
         self._parser = LibreHardwareMonitorParser()
-        self._session = session or aiohttp.ClientSession()
+        self._session = session
         self._data_url = f"http://{host}:{port}/data.json"
         self._timeout = aiohttp.ClientTimeout(total=DEFAULT_TIMEOUT)
         self._auth: BasicAuth | None = None
@@ -37,7 +40,7 @@ class LibreHardwareMonitorClient:
     async def get_data(self) -> LibreHardwareMonitorData:
         """Get the latest data from the LibreHardwareMonitor API."""
         try:
-            async with self._session as session:
+            async with self._session_cm() as session:
                 response = await session.get(self._data_url, auth=self._auth, timeout=self._timeout)
                 response.raise_for_status()
                 lhm_data = await response.json()
@@ -50,3 +53,11 @@ class LibreHardwareMonitorClient:
             raise
         except Exception as exception:  # pylint: disable=broad-except
             raise LibreHardwareMonitorConnectionError(exception) from exception
+
+    @asynccontextmanager
+    async def _session_cm(self) -> AsyncGenerator[ClientSession, None]:
+        if self._session is not None:
+            yield self._session
+        else:
+            async with aiohttp.ClientSession() as session:
+                yield session
