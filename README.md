@@ -4,11 +4,25 @@ A Python library for interacting with the [LibreHardwareMonitor](https://github.
 ## Overview
 This library provides a simple interface for fetching data from the API provided by the inbuilt LibreHardwareMonitor web server.
 
-## Methods
+## Installation
+To install the library, run the following command:
+```bash
+pip install librehardwaremonitor-api
+```
+
+## Usage
+The `LibreHardwareMonitorClient` takes the following parameters:
+* Required:
+  * `host` (str): hostname or IP address of your system
+  * `port` (int): port used by Libre Hardware Monitor (default: 8085)
+* Optional parameters
+  * `session` (aiohttp.ClientSession): provide a aiohttp.ClientSession
+  * `username` (str): if you have set up authentication for the webserver in Libre Hardware Monitor
+  * `password` (str): if you have set up authentication for the webserver in Libre Hardware Monito.
+
 The library provides one callable method:
 
 * `get_data`: Returns a `LibreHardwareMonitorData` object containing the computer name, main hardware device names and all sensor data from your Libre Hardware Monitor instance.
-  * Optional parameters: `username` and `password` if you have set up authentication for the webserver in Libre Hardware Monitor.
 
 `LibreHardwareMonitorData` has 3 properties with the following structure:
 ```
@@ -45,21 +59,13 @@ LibreHardwareMonitorData(
 )
 ```
 
-
-
-## Installation
-To install the library, run the following command:
-```bash
-pip install librehardwaremonitor-api
-```
-
-## Usage
+## Example
 ```
 import asyncio
 from librehardwaremonitor_api import LibreHardwareMonitorClient
 
 async def main():
-    client = LibreHardwareMonitorClient("<HOSTNAME OR IP ADDRESS>", <PORT>)
+    client = LibreHardwareMonitorClient("192.168.1.100", 8085)
 
     lhm_data = await client.get_data()
     print(lhm_data.computer_name)
