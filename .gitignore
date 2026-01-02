@@ -31,7 +31,6 @@ build
 eggs
 .eggs
 parts
-bin
 var
 sdist
 develop-eggs
@@ -64,7 +63,6 @@ venv
 .venv
 Pipfile*
 share/*
-/Scripts/
 
 # Visual Studio Code
 .vscode/*
