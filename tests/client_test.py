@@ -37,7 +37,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase):
         password: str | None = "s3cr3t",
     ) -> LibreHardwareMonitorClient:
         return LibreHardwareMonitorClient(
-            host=host, port=port, session=session, username=username, password=password
+            host=host, port=port, username=username, password=password, session=session
         )
 
     def _build_session_mock(
@@ -90,16 +90,16 @@ class TestClient(unittest.IsolatedAsyncioTestCase):
 
     async def test_get_data_unauthorized_raises_error(self) -> None:
         error = aiohttp.ClientResponseError(request_info=MagicMock(), history=(), status=401)
-        session_mock = self._build_session_mock(raise_for_status=error)
-        client = self._build_client(session=session_mock)
+        mock_session_with_error = self._build_session_mock(raise_for_status=error)
+        client = self._build_client(session=mock_session_with_error)
 
         with self.assertRaises(LibreHardwareMonitorUnauthorizedError):
             await client.get_data()
 
     async def test_get_data_other_response_error_raises_connection_error(self) -> None:
         error = aiohttp.ClientResponseError(request_info=MagicMock(), history=(), status=500)
-        session_mock = self._build_session_mock(raise_for_status=error)
-        client = self._build_client(session=session_mock)
+        mock_session_with_error = self._build_session_mock(raise_for_status=error)
+        client = self._build_client(session=mock_session_with_error)
 
         with self.assertRaises(LibreHardwareMonitorConnectionError) as ctx:
             await client.get_data()
