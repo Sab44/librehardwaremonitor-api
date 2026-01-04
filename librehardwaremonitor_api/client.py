@@ -24,9 +24,9 @@ class LibreHardwareMonitorClient:
         self,
         host: str,
         port: int,
-        session: ClientSession | None = None,
         username: str | None = None,
         password: str | None = None,
+        session: ClientSession | None = None,
     ) -> None:
         """Initialize the API."""
         self._parser = LibreHardwareMonitorParser()
