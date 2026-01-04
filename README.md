@@ -15,9 +15,9 @@ The `LibreHardwareMonitorClient` takes the following parameters:
 * Required:
   * `host` (str): hostname or IP address of your system
   * `port` (int): port used by Libre Hardware Monitor (default: 8085)
-* Optional parameters
+* Optional:
   * `username` (str): if you have set up authentication for the webserver in Libre Hardware Monitor
-  * `password` (str): if you have set up authentication for the webserver in Libre Hardware Monito.
+  * `password` (str): if you have set up authentication for the webserver in Libre Hardware Monitor
   * `session` (aiohttp.ClientSession): provide a aiohttp.ClientSession
 
 The library provides one callable method:
