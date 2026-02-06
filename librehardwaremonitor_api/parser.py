@@ -8,6 +8,7 @@ from librehardwaremonitor_api.model import DeviceId
 from librehardwaremonitor_api.model import DeviceName
 from librehardwaremonitor_api.model import LibreHardwareMonitorData
 from librehardwaremonitor_api.model import LibreHardwareMonitorSensorData
+from librehardwaremonitor_api.sensor_type import SensorType
 
 LHM_CHILDREN = "Children"
 LHM_DEVICE_TYPE = "ImageURL"
@@ -65,7 +66,7 @@ class LibreHardwareMonitorParser:
                 device_id = sensor_id.rsplit("-", 2)[0]
 
             name: str = sensor[LHM_NAME]
-            type: str = sensor[LHM_TYPE]
+            type: SensorType | None = self._parse_sensor_type(sensor[LHM_TYPE])
 
             value: str | None = sensor[LHM_VALUE].split(" ")[0]
             min: str | None = sensor[LHM_MIN].split(" ")[0]
@@ -80,7 +81,7 @@ class LibreHardwareMonitorParser:
             if " " in sensor[LHM_VALUE]:
                 unit = sensor[LHM_VALUE].split(" ")[1]
 
-            if type == "Throughput":
+            if type == SensorType.THROUGHPUT:
                 if raw_value := sensor.get(LHM_RAW_VALUE):
                     unit = "KB/s"
 
@@ -101,7 +102,7 @@ class LibreHardwareMonitorParser:
                         min = None
                         max = None
 
-            elif type == "TimeSpan":
+            elif type == SensorType.TIMESPAN:
                 unit = "s"
 
                 if raw_value := sensor.get(LHM_RAW_VALUE):
@@ -117,9 +118,15 @@ class LibreHardwareMonitorParser:
             min = self._ensure_value_is_numerical(min)
             max = self._ensure_value_is_numerical(max)
 
+            if type_suffix := self._get_type_suffix_for_name(type):
+                # Avoid sensor names like "Core Power Power" or "Data Uploaded Data"
+                if type_suffix not in name:
+                    name = f"{name} {type_suffix}"
+
             sensor_data = LibreHardwareMonitorSensorData(
-                name=f"{name} {type}",
+                name=name,
                 value=value,
+                type=type,
                 min=min,
                 max=max,
                 unit=unit,
@@ -149,6 +156,13 @@ class LibreHardwareMonitorParser:
         if not id:
             return None
         return re.sub(r"[^a-zA-Z0-9_-]", "", "-".join(id.split("/")[1:]))
+
+    def _parse_sensor_type(self, type: str) -> SensorType | None:
+        """Parse the sensor type from the type property."""
+        try:
+            return SensorType(type)
+        except ValueError:
+            return None
 
     def _parse_device_type(self, main_device: dict[str, Any]) -> str:
         """Parse the device type from the image url property."""
@@ -182,3 +196,17 @@ class LibreHardwareMonitorParser:
             return str(converted_to_seconds)
         except ValueError:
             return None
+
+    def _get_type_suffix_for_name(self, sensor_type: SensorType | None) -> str | None:
+        if not sensor_type:
+            return None
+
+        match sensor_type:
+            case SensorType.FAN:
+                return "Speed"
+            case SensorType.ENERGY:
+                return "Capacity"
+            case SensorType.SMALL_DATA:
+                return "Data"
+
+        return str(sensor_type)

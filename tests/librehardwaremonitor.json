@@ -1853,6 +1853,30 @@
                   "Children": []
                 }
               ]
+            },
+            {
+              "id": 169,
+              "Text": "Capacities",
+              "Min": "",
+              "Value": "",
+              "Max": "",
+              "ImageURL": "images_icon/power.png",
+              "Children": [
+                {
+                  "id": 170,
+                  "Text": "Remaining Capacity",
+                  "Min": "22823 mWh",
+                  "Value": "22823 mWh",
+                  "Max": "23864 mWh",
+                  "SensorId": "/battery/DELL-G8VCF6C_1/energy/0",
+                  "Type": "Energy",
+                  "RawMin": "22823 mWh",
+                  "RawValue": "22823 mWh",
+                  "RawMax": "23864 mWh",
+                  "ImageURL": "images/transparent.png",
+                  "Children": []
+                }
+              ]
             }
           ]
         }

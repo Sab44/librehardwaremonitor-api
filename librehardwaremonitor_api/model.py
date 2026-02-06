@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from types import MappingProxyType
 from typing import NewType
 
+from librehardwaremonitor_api.sensor_type import SensorType
+
 DeviceId = NewType("DeviceId", str)
 DeviceName = NewType("DeviceName", str)
 
@@ -12,6 +14,7 @@ class LibreHardwareMonitorSensorData:
 
     name: str
     value: str | None
+    type: SensorType | None
     min: str | None
     max: str | None
     unit: str | None

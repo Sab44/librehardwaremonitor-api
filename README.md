@@ -44,6 +44,7 @@ LibreHardwareMonitorData(
     #     "amdcpu-0-power-0": {
     #         "name": Package Power",
     #         "value": "25.6",
+    #         "type": "Power",
     #         "min": "25.2",
     #         "max": "76.4",
     #         "unit": "W",

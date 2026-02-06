@@ -40,8 +40,8 @@ class TestParser(unittest.TestCase):
         assert len(set([value.device_name for value in result.sensor_data.values()])) == 3
         assert sum(value.device_name == "AMD Ryzen 7 7800X3D" for value in sensor_data) == 72
         assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 32
-        assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 2
-        assert len(result.sensor_data) == 106
+        assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 3
+        assert len(result.sensor_data) == 107
 
     def test_error_is_raised_when_no_devices_with_sensors_are_available(self) -> None:
         del self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][1:]
@@ -68,8 +68,8 @@ class TestParser(unittest.TestCase):
         assert sum(value.device_name == "MSI MAG B650M MORTAR WIFI (MS-7D76)" for value in sensor_data) == 37
         assert sum(value.device_name == "AMD Ryzen 7 7800X3D" for value in sensor_data) == 72
         assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 32
-        assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 2
-        assert len(result.sensor_data) == 143
+        assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 3
+        assert len(result.sensor_data) == 144
 
         assert "gpu-nvidia-0-control-1" in result.sensor_data
         assert result.sensor_data["gpu-nvidia-0-control-1"].device_id == "gpu-nvidia-test-0"
@@ -120,3 +120,24 @@ class TestParser(unittest.TestCase):
             "gpu-nvidia-test-0",
             "battery-DELL-G8VCF6C_1",
         }
+
+    def test_sensor_names_receive_type_suffix(self) -> None:
+        result = self.parser.parse_data(self.data_json)
+
+        # Name that does not contain type gets type suffix
+        assert result.sensor_data["amdcpu-0-power-1"].name == "CPU PPT Power"
+        assert result.sensor_data["lpc-nct6687d-0-voltage-4"].name == "DIMM Voltage"
+
+        # Name that contains type does not get type suffix
+        assert result.sensor_data["amdcpu-0-power-2"].name == "Core Power"
+        assert result.sensor_data["lpc-nct6687d-0-voltage-3"].name == "Voltage #1"
+
+        # "Fan" RPM types get mapped to "Speed" suffix
+        assert result.sensor_data["lpc-nct6687d-0-fan-0"].name == "CPU Fan Speed"
+        assert result.sensor_data["lpc-nct6687d-0-fan-2"].name == "System Fan #1 Speed"
+
+        # "Energy" types get mapped to "Capacity" suffix (and is not appended if contained in name)
+        assert result.sensor_data["battery-DELL-G8VCF6C_1-energy-0"].name == "Remaining Capacity"
+
+        # "SmallData" types get mapped to "Data" suffix
+        assert result.sensor_data["gpu-nvidia-0-smalldata-0"].name == "GPU Memory Free Data"
