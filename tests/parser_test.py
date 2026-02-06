@@ -136,8 +136,11 @@ class TestParser(unittest.TestCase):
         assert result.sensor_data["lpc-nct6687d-0-fan-0"].name == "CPU Fan Speed"
         assert result.sensor_data["lpc-nct6687d-0-fan-2"].name == "System Fan #1 Speed"
 
-        # "Energy" types get mapped to "Capacity" suffix (and is not appended if contained in name)
-        assert result.sensor_data["battery-DELL-G8VCF6C_1-energy-0"].name == "Remaining Capacity"
-
         # "SmallData" types get mapped to "Data" suffix
         assert result.sensor_data["gpu-nvidia-0-smalldata-0"].name == "GPU Memory Free Data"
+
+        # "TimeSpan" types get mapped to "Time" suffix (and is not appended if contained in name)
+        assert result.sensor_data["battery-DELL-G8VCF6C_1-timespan-0"].name == "Test Remaining Time (1)"
+
+        # "Energy" types get mapped to "Capacity" suffix (and is not appended if contained in name)
+        assert result.sensor_data["battery-DELL-G8VCF6C_1-energy-0"].name == "Remaining Capacity"

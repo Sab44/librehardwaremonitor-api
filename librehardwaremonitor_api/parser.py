@@ -204,9 +204,11 @@ class LibreHardwareMonitorParser:
         match sensor_type:
             case SensorType.FAN:
                 return "Speed"
-            case SensorType.ENERGY:
-                return "Capacity"
             case SensorType.SMALL_DATA:
                 return "Data"
+            case SensorType.TIMESPAN:
+                return "Time"
+            case SensorType.ENERGY:
+                return "Capacity"
 
         return str(sensor_type)
