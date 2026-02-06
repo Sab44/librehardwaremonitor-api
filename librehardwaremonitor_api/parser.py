@@ -1,7 +1,6 @@
 import re
 from types import MappingProxyType
 from typing import Any
-from typing import Optional
 
 from librehardwaremonitor_api.errors import LibreHardwareMonitorNoDevicesError
 from librehardwaremonitor_api.model import DeviceId
@@ -151,7 +150,7 @@ class LibreHardwareMonitorParser:
 
         return value
 
-    def _format_id(self, id: Optional[str]) -> Optional[str]:
+    def _format_id(self, id: str | None) -> str | None:
         """Format a given ID to remove slashes and undesired characters."""
         if not id:
             return None
