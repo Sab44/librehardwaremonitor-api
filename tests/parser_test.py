@@ -84,10 +84,10 @@ class TestParser(unittest.TestCase):
 
         # test Throughput sensor with RawValue being available
         assert "gpu-nvidia-0-throughput-1" in result.sensor_data
-        assert result.sensor_data["gpu-nvidia-0-throughput-1"].value == "300.0"
-        assert result.sensor_data["gpu-nvidia-0-throughput-1"].min == "50.0"
-        assert result.sensor_data["gpu-nvidia-0-throughput-1"].max == "683250.0"
-        assert result.sensor_data["gpu-nvidia-0-throughput-1"].unit == "KB/s"
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].value == "307200.5"
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].min == "51201.0"
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].max == "699648000.0"
+        assert result.sensor_data["gpu-nvidia-0-throughput-1"].unit == "B/s"
 
         # test TimeSpan sensor without RawValue being available
         assert "battery-DELL-G8VCF6C_1-timespan-0" in result.sensor_data

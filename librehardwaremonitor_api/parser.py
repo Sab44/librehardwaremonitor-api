@@ -82,25 +82,11 @@ class LibreHardwareMonitorParser:
 
             if type == SensorType.THROUGHPUT:
                 if raw_value := sensor.get(LHM_RAW_VALUE):
-                    unit = "KB/s"
+                    unit = "B/s"
 
-                    raw_value = raw_value.split(" ")[0].replace(",", ".")
-                    raw_min = sensor[LHM_RAW_MIN].split(" ")[0].replace(",", ".")
-                    raw_max = sensor[LHM_RAW_MAX].split(" ")[0].replace(",", ".")
-
-                    try:
-                        normalized_value = f"{(float(raw_value) / 1024):.1f}"
-                        normalized_min = f"{(float(raw_min) / 1024):.1f}"
-                        normalized_max = f"{(float(raw_max) / 1024):.1f}"
-
-                        value = normalized_value
-                        min = normalized_min
-                        max = normalized_max
-                    except ValueError:
-                        value = None
-                        min = None
-                        max = None
-
+                    value = raw_value.split(" ")[0].replace(",", ".")
+                    min = sensor[LHM_RAW_MIN].split(" ")[0].replace(",", ".")
+                    max = sensor[LHM_RAW_MAX].split(" ")[0].replace(",", ".")
             elif type == SensorType.TIMESPAN:
                 unit = "s"
 

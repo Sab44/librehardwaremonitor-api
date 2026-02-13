@@ -1801,7 +1801,7 @@
                   "SensorId": "/gpu-nvidia/0/throughput/1",
                   "Type": "Throughput",
                   "RawMin": "51201,0 B/s",
-                  "RawValue": "307200,0 B/s",
+                  "RawValue": "307200,5 B/s",
                   "RawMax": "699648000,0 B/s",
                   "ImageURL": "images/transparent.png",
                   "Children": []
