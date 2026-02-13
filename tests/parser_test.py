@@ -144,3 +144,9 @@ class TestParser(unittest.TestCase):
 
         # "Energy" types get mapped to "Capacity" suffix (and is not appended if contained in name)
         assert result.sensor_data["battery-DELL-G8VCF6C_1-energy-0"].name == "Remaining Capacity"
+
+    def test_unknown_type_is_handled(self) -> None:
+        result = self.parser.parse_data(self.data_json)
+
+        assert result.sensor_data["amdcpu-0-current-0"].type == "Current"
+        assert result.sensor_data["amdcpu-0-current-1"].type is None

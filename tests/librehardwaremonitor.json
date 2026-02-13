@@ -657,7 +657,7 @@
                   "Value": "2,107 A",
                   "Max": "34,466 A",
                   "SensorId": "/amdcpu/0/current/1",
-                  "Type": "Current",
+                  "Type": "TestUnknownType",
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }
