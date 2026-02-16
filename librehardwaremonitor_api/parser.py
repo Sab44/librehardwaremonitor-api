@@ -24,6 +24,11 @@ LHM_VALUE = "Value"
 
 
 class LibreHardwareMonitorParser:
+    def __init__(self) -> None:
+        # LHM versions >= 0.9.5 include major API improvements
+        # LHM versions < 0.9.5 will be marked as deprecated
+        self._is_deprecated_version = False
+
     def parse_data(self, lhm_data: dict[str, Any]) -> LibreHardwareMonitorData:
         """Get data from all sensors across all devices."""
         computer_name = lhm_data[LHM_CHILDREN][0][LHM_NAME]
@@ -48,6 +53,7 @@ class LibreHardwareMonitorParser:
             computer_name=computer_name,
             main_device_ids_and_names=MappingProxyType(main_device_ids_and_names),
             sensor_data=MappingProxyType(sensors_data),
+            is_deprecated_version=self._is_deprecated_version,
         )
 
     def _parse_sensor_data(self, main_device: dict[str, Any]) -> list[LibreHardwareMonitorSensorData]:
@@ -63,6 +69,7 @@ class LibreHardwareMonitorParser:
             # For versions <= 0.9.4 use legacy method of parsing device id from sensor id
             if not device_id:
                 device_id = sensor_id.rsplit("-", 2)[0]
+                self._is_deprecated_version = True
 
             name: str = sensor[LHM_NAME]
             type: SensorType | None = self._parse_sensor_type(sensor[LHM_TYPE])

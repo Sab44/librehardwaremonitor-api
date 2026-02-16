@@ -5,6 +5,7 @@ from typing import Any
 
 from librehardwaremonitor_api import LibreHardwareMonitorNoDevicesError
 from librehardwaremonitor_api.parser import LHM_CHILDREN
+from librehardwaremonitor_api.parser import LHM_HARDWARE_ID
 from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
 
 
@@ -52,7 +53,7 @@ class TestParser(unittest.TestCase):
 
     def test_lhm_json_is_parsed_correctly(self) -> None:
         expected_main_device_ids_and_names = {
-            "lpc-nct6687d-0": "MSI MAG B650M MORTAR WIFI (MS-7D76)",
+            "motherboard": "MSI MAG B650M MORTAR WIFI (MS-7D76)",
             "amdcpu-0": "AMD Ryzen 7 7800X3D",
             "gpu-nvidia-test-0": "NVIDIA GeForce RTX 4080 SUPER",
             "battery-DELL-G8VCF6C_1": "DELL G8VCF6C",
@@ -115,7 +116,7 @@ class TestParser(unittest.TestCase):
 
         device_ids = set([sensor_data.device_id for sensor_data in result.sensor_data.values()])
         assert device_ids == {
-            "lpc-nct6687d-0",
+            "motherboard",
             "amdcpu-0",
             "gpu-nvidia-test-0",
             "battery-DELL-G8VCF6C_1",
@@ -150,3 +151,12 @@ class TestParser(unittest.TestCase):
 
         assert result.sensor_data["amdcpu-0-current-0"].type == "Current"
         assert result.sensor_data["amdcpu-0-current-1"].type is None
+
+    def test_deprecated_version_is_set(self) -> None:
+        result = self.parser.parse_data(self.data_json)
+        assert not result.is_deprecated_version
+
+        self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][1].pop(LHM_HARDWARE_ID)
+
+        result = self.parser.parse_data(self.data_json)
+        assert result.is_deprecated_version

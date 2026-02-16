@@ -20,6 +20,7 @@
           "Min": "",
           "Value": "",
           "Max": "",
+          "HardwareId": "/motherboard",
           "ImageURL": "images_icon/mainboard.png",
           "Children": [
             {
@@ -28,6 +29,7 @@
               "Min": "",
               "Value": "",
               "Max": "",
+              "HardwareId": "/lpc/nct6687d/0",
               "ImageURL": "images_icon/chip.png",
               "Children": [
                 {
@@ -487,6 +489,7 @@
           "Min": "",
           "Value": "",
           "Max": "",
+          "HardwareId": "/amdcpu/0",
           "ImageURL": "images_icon/cpu.png",
           "Children": [
             {

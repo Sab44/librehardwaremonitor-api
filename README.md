@@ -24,7 +24,7 @@ The library provides one callable method:
 
 * `get_data`: Returns a `LibreHardwareMonitorData` object containing the computer name, main hardware device names and all sensor data from your Libre Hardware Monitor instance.
 
-`LibreHardwareMonitorData` has 3 properties with the following structure:
+`LibreHardwareMonitorData` has 4 properties with the following structure:
 ```
 LibreHardwareMonitorData(
     computer_name: str
@@ -57,6 +57,10 @@ LibreHardwareMonitorData(
     #     ...
     # }
     # the dictionary keys represent a unique sensor id.
+    
+    is_deprecated_version: bool
+    # indicates whether the requested API version is deprecated
+    # at the moment, versions <= 0.9.4 are deprecated
 )
 ```
 
@@ -72,6 +76,9 @@ async def main():
     print(lhm_data.computer_name)
     print(lhm_data.main_device_ids_and_names)
     print(lhm_data.sensor_data)
+    
+    if lhm_data.is_deprecated_version:
+        print("Deprecated version detected.")
 
 asyncio.run(main())
 ```

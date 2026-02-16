@@ -31,3 +31,4 @@ class LibreHardwareMonitorData:
     computer_name: str
     main_device_ids_and_names: MappingProxyType[DeviceId, DeviceName]
     sensor_data: MappingProxyType[str, LibreHardwareMonitorSensorData]
+    is_deprecated_version: bool
