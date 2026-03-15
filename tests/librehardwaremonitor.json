@@ -1804,9 +1804,9 @@
                   "Max": "367,2 MB/s",
                   "SensorId": "/gpu-nvidia/0/throughput/1",
                   "Type": "Throughput",
-                  "RawMin": "51201,0 B/s",
-                  "RawValue": "307200,5 B/s",
-                  "RawMax": "699648000,0 B/s",
+                  "RawMin": "51201,0",
+                  "RawValue": "307200,5",
+                  "RawMax": "699648000,0",
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }
@@ -1874,9 +1874,9 @@
                   "Max": "23864 mWh",
                   "SensorId": "/battery/DELL-G8VCF6C_1/energy/0",
                   "Type": "Energy",
-                  "RawMin": "22823 mWh",
-                  "RawValue": "22823 mWh",
-                  "RawMax": "23864 mWh",
+                  "RawMin": "22823",
+                  "RawValue": "22823",
+                  "RawMax": "23864",
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }
