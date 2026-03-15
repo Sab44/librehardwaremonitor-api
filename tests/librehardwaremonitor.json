@@ -1804,9 +1804,23 @@
                   "Max": "367,2 MB/s",
                   "SensorId": "/gpu-nvidia/0/throughput/1",
                   "Type": "Throughput",
-                  "RawMin": "51201,0",
-                  "RawValue": "307200,5",
-                  "RawMax": "699648000,0",
+                  "RawMin": 51201.0,
+                  "RawValue": 307200.5,
+                  "RawMax": 699648000.0,
+                  "ImageURL": "images/transparent.png",
+                  "Children": []
+                },
+                {
+                  "id": 167,
+                  "Text": "GPU PCIe Test",
+                  "Min": "-",
+                  "Value": "-",
+                  "Max": "-",
+                  "SensorId": "/gpu-nvidia/0/throughput/2",
+                  "Type": "Throughput",
+                  "RawMin": null,
+                  "RawValue": null,
+                  "RawMax": null,
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }
@@ -1815,7 +1829,7 @@
           ]
         },
         {
-          "id": 165,
+          "id": 168,
           "Text": "DELL G8VCF6C",
           "Min": "",
           "Value": "",
@@ -1824,7 +1838,7 @@
           "ImageURL": "images_icon/battery.png",
           "Children": [
             {
-              "id": 166,
+              "id": 169,
               "Text": "Times",
               "Min": "",
               "Value": "",
@@ -1832,7 +1846,7 @@
               "ImageURL": "images_icon/power.png",
               "Children": [
                 {
-                  "id": 167,
+                  "id": 170,
                   "Text": "Test Remaining Time (1)",
                   "Min": "0:43:16",
                   "Value": "2:02:31",
@@ -1843,23 +1857,23 @@
                   "Children": []
                 },
                 {
-                  "id": 168,
+                  "id": 171,
                   "Text": "Test Remaining Time (2)",
                   "Min": "test_should_not_be_relevant",
                   "Value": "test_should_not_be_relevant",
                   "Max": "test_should_not_be_relevant",
                   "SensorId": "/battery/DELL-G8VCF6C_1/timespan/1",
                   "Type": "TimeSpan",
-                  "RawMin": "2596",
-                  "RawValue": "3751",
-                  "RawMax": "3782",
+                  "RawMin": 2596,
+                  "RawValue": 3751,
+                  "RawMax": 3782,
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }
               ]
             },
             {
-              "id": 169,
+              "id": 172,
               "Text": "Capacities",
               "Min": "",
               "Value": "",
@@ -1867,16 +1881,16 @@
               "ImageURL": "images_icon/power.png",
               "Children": [
                 {
-                  "id": 170,
+                  "id": 173,
                   "Text": "Remaining Capacity",
                   "Min": "22823 mWh",
                   "Value": "22823 mWh",
                   "Max": "23864 mWh",
                   "SensorId": "/battery/DELL-G8VCF6C_1/energy/0",
                   "Type": "Energy",
-                  "RawMin": "22823",
-                  "RawValue": "22823",
-                  "RawMax": "23864",
+                  "RawMin": 22823,
+                  "RawValue": 22823,
+                  "RawMax": 23864,
                   "ImageURL": "images/transparent.png",
                   "Children": []
                 }

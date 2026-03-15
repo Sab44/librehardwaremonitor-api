@@ -42,9 +42,9 @@ class TestParser(unittest.TestCase):
         sensor_data = result.sensor_data.values()
         assert len(set([value.device_name for value in result.sensor_data.values()])) == 3
         assert sum(value.device_name == "AMD Ryzen 7 7800X3D" for value in sensor_data) == 72
-        assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 32
+        assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 33
         assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 3
-        assert len(result.sensor_data) == 107
+        assert len(result.sensor_data) == 108
 
     def test_error_is_raised_when_no_devices_with_sensors_are_available(self) -> None:
         del self.data_json[LHM_CHILDREN][0][LHM_CHILDREN][1:]
@@ -70,9 +70,9 @@ class TestParser(unittest.TestCase):
         assert len(set([value.device_name for value in sensor_data])) == 4
         assert sum(value.device_name == "MSI MAG B650M MORTAR WIFI (MS-7D76)" for value in sensor_data) == 37
         assert sum(value.device_name == "AMD Ryzen 7 7800X3D" for value in sensor_data) == 72
-        assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 32
+        assert sum(value.device_name == "NVIDIA GeForce RTX 4080 SUPER" for value in sensor_data) == 33
         assert sum(value.device_name == "DELL G8VCF6C" for value in sensor_data) == 3
-        assert len(result.sensor_data) == 144
+        assert len(result.sensor_data) == 145
 
         assert "gpu-nvidia-0-control-1" in result.sensor_data
         assert result.sensor_data["gpu-nvidia-0-control-1"].device_id == "gpu-nvidia-test-0"
@@ -110,6 +110,11 @@ class TestParser(unittest.TestCase):
         assert result.sensor_data["lpc-nct6687d-0-control-7"].value is None
         assert result.sensor_data["lpc-nct6687d-0-control-7"].min is None
         assert result.sensor_data["lpc-nct6687d-0-control-7"].max is None
+        # null values in raw values
+        assert "gpu-nvidia-0-throughput-2" in result.sensor_data
+        assert result.sensor_data["gpu-nvidia-0-throughput-2"].value is None
+        assert result.sensor_data["gpu-nvidia-0-throughput-2"].min is None
+        assert result.sensor_data["gpu-nvidia-0-throughput-2"].max is None
         # "NaN" values
         assert "amdcpu-0-clock-11" in result.sensor_data
         assert result.sensor_data["amdcpu-0-clock-11"].value is None

@@ -100,16 +100,23 @@ class LibreHardwareMonitorParser:
                 if raw_value := sensor.get(LHM_RAW_VALUE):
                     unit = "B/s"
 
-                    value = raw_value.split(" ")[0].replace(",", ".")
-                    min = sensor[LHM_RAW_MIN].split(" ")[0].replace(",", ".")
-                    max = sensor[LHM_RAW_MAX].split(" ")[0].replace(",", ".")
+                    # In LHM Versions > 0.9.6 raw values are given as numbers instead of strings
+                    if not isinstance(raw_value, str):
+                        value = f"{raw_value:.1f}"
+                        min = f"{sensor[LHM_RAW_MIN]:.1f}"
+                        max = f"{sensor[LHM_RAW_MAX]:.1f}"
+                    # Legacy flow
+                    else:
+                        value = raw_value.split(" ")[0].replace(",", ".")
+                        min = sensor[LHM_RAW_MIN].split(" ")[0].replace(",", ".")
+                        max = sensor[LHM_RAW_MAX].split(" ")[0].replace(",", ".")
             elif type == SensorType.TIMESPAN:
                 unit = "s"
 
                 if raw_value := sensor.get(LHM_RAW_VALUE):
-                    value = raw_value
-                    min = sensor[LHM_RAW_MIN]
-                    max = sensor[LHM_RAW_MAX]
+                    value = str(raw_value)
+                    min = str(sensor[LHM_RAW_MIN])
+                    max = str(sensor[LHM_RAW_MAX])
                 else:
                     value = self._convert_to_seconds(value)
                     min = self._convert_to_seconds(min)
