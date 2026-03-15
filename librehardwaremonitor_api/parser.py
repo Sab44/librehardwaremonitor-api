@@ -7,8 +7,10 @@ from librehardwaremonitor_api.model import DeviceId
 from librehardwaremonitor_api.model import DeviceName
 from librehardwaremonitor_api.model import LibreHardwareMonitorData
 from librehardwaremonitor_api.model import LibreHardwareMonitorSensorData
+from librehardwaremonitor_api.model import LibreHardwareMonitorVersion
 from librehardwaremonitor_api.sensor_type import SensorType
 
+LHM_VERSION = "Version"
 LHM_CHILDREN = "Children"
 LHM_DEVICE_TYPE = "ImageURL"
 LHM_HARDWARE_ID = "HardwareId"
@@ -49,10 +51,17 @@ class LibreHardwareMonitorParser:
         if not sensors_data:
             raise LibreHardwareMonitorNoDevicesError from None
 
+        # Version is available in the data.json from LHM versions > 0.9.6
+        try:
+            version = LibreHardwareMonitorVersion.parse(lhm_data[LHM_VERSION])
+        except Exception:  # pylint: disable=broad-except
+            version = LibreHardwareMonitorVersion(0, 0, 0)
+
         return LibreHardwareMonitorData(
             computer_name=computer_name,
             main_device_ids_and_names=MappingProxyType(main_device_ids_and_names),
             sensor_data=MappingProxyType(sensors_data),
+            version=version,
             is_deprecated_version=self._is_deprecated_version,
         )
 

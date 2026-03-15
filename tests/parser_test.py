@@ -4,8 +4,10 @@ from pathlib import Path
 from typing import Any
 
 from librehardwaremonitor_api import LibreHardwareMonitorNoDevicesError
+from librehardwaremonitor_api.model import LibreHardwareMonitorVersion
 from librehardwaremonitor_api.parser import LHM_CHILDREN
 from librehardwaremonitor_api.parser import LHM_HARDWARE_ID
+from librehardwaremonitor_api.parser import LHM_VERSION
 from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
 
 
@@ -151,6 +153,32 @@ class TestParser(unittest.TestCase):
 
         assert result.sensor_data["amdcpu-0-current-0"].type == "Current"
         assert result.sensor_data["amdcpu-0-current-1"].type is None
+
+    def test_version_is_parsed_correctly(self) -> None:
+        result = self.parser.parse_data(self.data_json)
+        assert result.version == LibreHardwareMonitorVersion(0, 9, 7)
+        assert str(result.version) == "0.9.7"
+
+        self.data_json.pop(LHM_VERSION)
+
+        result = self.parser.parse_data(self.data_json)
+        assert result.version == LibreHardwareMonitorVersion(0, 0, 0)
+        assert str(result.version) == "0.0.0"
+
+    def test_invalid_version_syntax_is_parsed_to_fallback_version(self) -> None:
+        invalid_versions = {
+            "some.invalid.version.syntax",
+            "v1.3.4",
+            "0.9.7.1",
+            "1.14.2rc1",
+        }
+
+        for invalid_version in invalid_versions:
+            self.data_json[LHM_VERSION] = invalid_version
+
+            result = self.parser.parse_data(self.data_json)
+            assert result.version == LibreHardwareMonitorVersion(0, 0, 0)
+            assert str(result.version) == "0.0.0"
 
     def test_deprecated_version_is_set(self) -> None:
         result = self.parser.parse_data(self.data_json)
