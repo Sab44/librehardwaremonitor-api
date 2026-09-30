@@ -1,5 +1,5 @@
 # serializer version: 1
-# name: test_lhm_json_is_parsed_correctly[librehardwaremonitor_0.9.6.json]
+# name: test_lhm_json_is_parsed_correctly[fixtures/librehardwaremonitor_0.9.6.json]
   LibreHardwareMonitorData(
     computer_name='GAMING',
     is_deprecated_version=False,
@@ -3133,7 +3133,7 @@
     ),
   )
 # ---
-# name: test_lhm_json_is_parsed_correctly[librehardwaremonitor_0.9.7_nightly.json]
+# name: test_lhm_json_is_parsed_correctly[fixtures/librehardwaremonitor_0.9.7_nightly.json]
   LibreHardwareMonitorData(
     computer_name='GAMING',
     is_deprecated_version=False,

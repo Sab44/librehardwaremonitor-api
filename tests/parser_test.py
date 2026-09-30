@@ -23,9 +23,9 @@ from librehardwaremonitor_api.parser import LibreHardwareMonitorParser
 
 BASE_DIR = Path(__file__).absolute().parent
 # LHM 0.9.6 provides raw values as formatted strings
-LHM_0_9_6_JSON = "librehardwaremonitor_0.9.6.json"
+LHM_0_9_6_JSON = "fixtures/librehardwaremonitor_0.9.6.json"
 # LHM 0.9.7 provides its version and raw values as numbers, data sensors in bytes
-LHM_0_9_7_JSON = "librehardwaremonitor_0.9.7_nightly.json"
+LHM_0_9_7_JSON = "fixtures/librehardwaremonitor_0.9.7_nightly.json"
 
 
 @pytest.fixture
