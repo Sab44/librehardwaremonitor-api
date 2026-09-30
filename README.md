@@ -99,3 +99,12 @@ Optionally, execute manually via:
 ```
 uv run pre-commit run --all-files
 ```
+To run the unit tests, use:
+```
+uv run pytest
+```
+The parser is tested against snapshots of the parsed fixtures in `tests/`.
+After an intended change of the parsed data, review and update the snapshots via:
+```
+uv run pytest --snapshot-update
+```

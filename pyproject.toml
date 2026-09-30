@@ -20,10 +20,17 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pre-commit",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "syrupy>=6.1.1",
 ]
 
 [project.urls]
 Homepage = "https://github.com/Sab44/librehardwaremonitor-api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 110
