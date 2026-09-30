@@ -102,14 +102,23 @@ class LibreHardwareMonitorParser:
 
                     # In LHM Versions > 0.9.6 raw values are given as numbers instead of strings
                     if not isinstance(raw_value, str):
-                        value = f"{raw_value:.1f}"
-                        min = f"{sensor[LHM_RAW_MIN]:.1f}"
-                        max = f"{sensor[LHM_RAW_MAX]:.1f}"
+                        value = self._format_raw_value(raw_value)
+                        min = self._format_raw_value(sensor.get(LHM_RAW_MIN))
+                        max = self._format_raw_value(sensor.get(LHM_RAW_MAX))
                     # Legacy flow
                     else:
                         value = raw_value.split(" ")[0].replace(",", ".")
                         min = sensor[LHM_RAW_MIN].split(" ")[0].replace(",", ".")
                         max = sensor[LHM_RAW_MAX].split(" ")[0].replace(",", ".")
+            elif type == SensorType.DATA:
+                # In LHM Versions > 0.9.6 raw values of data sensors are given as numbers in bytes,
+                # older versions only provide them formatted in GB, so the formatted value is used
+                raw_value = sensor.get(LHM_RAW_VALUE)
+                if raw_value is not None and not isinstance(raw_value, str):
+                    unit = "B"
+                    value = self._format_raw_value(raw_value)
+                    min = self._format_raw_value(sensor.get(LHM_RAW_MIN))
+                    max = self._format_raw_value(sensor.get(LHM_RAW_MAX))
             elif type == SensorType.TIMESPAN:
                 unit = "s"
 
@@ -146,6 +155,12 @@ class LibreHardwareMonitorParser:
             sensor_data_for_device.append(sensor_data)
 
         return sensor_data_for_device
+
+    def _format_raw_value(self, raw_value: float | None) -> str | None:
+        """Format a numerical raw value."""
+        if raw_value is None:
+            return None
+        return f"{raw_value:.1f}"
 
     def _ensure_value_is_numerical(self, value: str | None) -> str | None:
         """Ensure a given string holds a numerical value."""
