@@ -143,6 +143,22 @@ def test_data_sensor_raw_value_of_zero_is_parsed_in_bytes(
     assert sensor_data.unit == "B"
 
 
+def test_throughput_sensor_raw_value_of_zero_is_parsed_in_bytes(
+    parser: LibreHardwareMonitorParser, lhm_json_0_9_7: dict[str, Any]
+) -> None:
+    _find_sensor(lhm_json_0_9_7, "/gpu-nvidia/0/throughput/1").update(
+        {LHM_VALUE: "0,0 KB/s", LHM_RAW_VALUE: 0}
+    )
+
+    result = parser.parse_data(lhm_json_0_9_7)
+
+    sensor_data = result.sensor_data["gpu-nvidia-0-throughput-1"]
+    assert sensor_data.value == "0.0"
+    assert sensor_data.min == "0.0"
+    assert sensor_data.max == "1122949120.0"
+    assert sensor_data.unit == "B/s"
+
+
 def test_raw_values_without_min_and_max_are_parsed(
     parser: LibreHardwareMonitorParser, lhm_json_0_9_7: dict[str, Any]
 ) -> None:
